@@ -1,0 +1,11 @@
+import path from 'path';
+let config = {};
+const PORT = 5000;
+config.logFileDir = path.resolve(__dirname, 'logs');
+config.rootDirectory = path.resolve(__dirname);
+config.logName = 'askmirrorServer.log';
+config.errorLogName = 'error.log';
+config.sessionSecret = 'qwer1234';
+config.domain = 'http://localhost:' + PORT;
+config.PORT = PORT;
+export default config;
