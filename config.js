@@ -1,11 +1,15 @@
 import path from 'path';
 let config = {};
-const PORT = 5000;
+export const PORT = 5000;
+export const SSL_PORT = 5001;
+const domain = 'dev.askmirror.local';
 config.logFileDir = path.resolve(__dirname, 'logs');
 config.rootDirectory = path.resolve(__dirname);
 config.logName = 'askmirrorServer.log';
 config.errorLogName = 'error.log';
 config.sessionSecret = 'qwer1234';
-config.domain = 'http://localhost:' + PORT;
+config.domain = `http://${domain}:${PORT}`;
+config.sslDomain = `https://${domain}:${SSL_PORT}`;
 config.PORT = PORT;
+config.SSL_PORT = SSL_PORT;
 export default config;
