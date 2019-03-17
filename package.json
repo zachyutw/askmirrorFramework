@@ -12,7 +12,8 @@
     "scripts": {
         "start": "nodemon --exec babel-node src/server.js",
         "build": "babel src --out-dir dist",
-        "serve": "node dist/server.js"
+        "serve": "node dist/server.js",
+        "test": "jest"
     },
     "dependencies": {
         "axios": "^0.18.0",
@@ -45,7 +46,11 @@
         "@babel/core": "^7.3.4",
         "@babel/node": "^7.2.2",
         "@babel/preset-env": "^7.3.4",
-        "jest": "^24.5.0",
-        "nodemon": "^1.18.10"
+        "nodemon": "^1.18.10",
+        "superagent": "^4.1.0",
+        "supertest": "^4.0.2"
+    },
+    "jest": {
+        "rootDir": "src"
     }
 }
