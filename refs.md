@@ -12,6 +12,7 @@
 
 ## Node 
 * [Node Blog](https://nodejs.org/en/blog/)
+* [How can I use variables in package.json?](https://stackoverflow.com/questions/43705195/how-can-i-use-variables-in-package-json)
 ## Babel 
 1. [Babel is a JavaScript compiler](https://babeljs.io/docs/en/)
 
@@ -26,4 +27,13 @@ openssl genrsa -des3 -out myCA.key 2048
 ```
 openssl x509 -req -in dev.askmirror.local.csr -CA myCA.pem -CAkey myCA.key -CAcreateserial \
 -out dev.askmirror.local.crt -days 1825 -sha256 -extfile dev.askmirror.local.ext
+```
+
+## Linux 
+* [How to read command line arguments in a bash script](https://how-to.fandom.com/wiki/How_to_read_command_line_arguments_in_a_bash_script)
+
+
+```
+chmod +x /path/to/yourscript.sh
+/path/to/yourscript.sh 
 ```

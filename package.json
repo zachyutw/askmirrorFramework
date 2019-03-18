@@ -5,6 +5,9 @@
     "main": "server.js",
     "author": "zachyu.tw@gmail.com",
     "license": "MIT",
+    "server": {
+        "domain": "dev.askmirror.local"
+    },
     "engines": {
         "node": "10.15.3",
         "npm": "6.4.1"
@@ -13,7 +16,8 @@
         "start": "nodemon --exec babel-node src/server.js",
         "build": "babel src --out-dir dist",
         "serve": "node dist/server.js",
-        "test": "jest"
+        "test": "jest",
+        "shcert": "rootdir=$(pwd) && ./scripts/cert/cert.script.sh ${rootdir} $npm_package_server_domain zachyu.tw@gmail.com"
     },
     "dependencies": {
         "axios": "^0.18.0",

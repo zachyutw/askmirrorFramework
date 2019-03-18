@@ -7,13 +7,13 @@ import https from 'https';
 import http from 'http';
 
 const options = {
-    key: fs.readFileSync(config.rootDirectory + '/cert/dev.askmirror.local.key'),
-    cert: fs.readFileSync(config.rootDirectory + '/cert/dev.askmirror.local.crt')
+    key: fs.readFileSync(config.ROOT_DIRECTORY + '/cert/dev.askmirror.local.key'),
+    cert: fs.readFileSync(config.ROOT_DIRECTORY + '/cert/dev.askmirror.local.crt')
 };
 
 const server = http.createServer(app);
 server.listen(config.PORT, () => {
-    logger.info('server started - ' + config.domain);
+    logger.info('server started - ' + config.DOMAIN);
 });
 
 const serverHttps = spdy.createServer(options, app).listen(config.SSL_PORT, (error) => {
@@ -21,6 +21,6 @@ const serverHttps = spdy.createServer(options, app).listen(config.SSL_PORT, (err
         console.error(error);
         return process.exit(1);
     } else {
-        logger.info('https server started - ' + config.sslDomain);
+        logger.info('https server started - ' + config.SSL_DOMAIN);
     }
 });

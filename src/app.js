@@ -3,7 +3,7 @@ import bodyParser from 'body-parser';
 import cookieSession from 'cookie-session';
 import passport from 'passport';
 import morgan from 'morgan';
-// import connectToDb from './db/connect';
+import dbMongoose from './db/db.mongoose';
 import path from 'path';
 // import socketIo from './services/socketIo';
 // import Passport from './services/passport';
@@ -24,7 +24,7 @@ const jwtSecrect = 'lasfu';
 //* passport setup
 // const port = config.PORT;
 
-// connectToDb();
+dbMongoose();
 const app = express();
 //* Node.js compression middleware.
 app.use(compression());
@@ -57,10 +57,10 @@ app.use(passport.session());
 
 // const serverPathUrl = serverPath();
 
-app.use('/', express.static(path.resolve(config.rootDirectory, 'client', 'build'), { maxAge: 60 * 60 * 3 }));
+app.use('/', express.static(path.resolve(config.ROOT_DIRECTORY, 'client', 'build'), { maxAge: 60 * 60 * 3 }));
 
 app.get('*', (req, res) => {
-    res.sendFile(path.resolve(config.rootDirectory, 'client', 'build', 'index.html'));
+    res.sendFile(path.resolve(config.ROOT_DIRECTORY, 'client', 'build', 'index.html'));
 });
 // app.use('/',expressStaticGzip(path.resolve(serverPathUrl, 'client', 'dist')));
 // const sslOptions = {

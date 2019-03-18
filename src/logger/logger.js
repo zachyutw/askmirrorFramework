@@ -25,7 +25,9 @@ let logger = new winston.createLogger({
             level: 'error',
             dirname: logFileDir,
             filename: errorLogName,
-            json: true
+            json: true,
+            maxsize: 20971520, //20MB
+            maxFiles: 25
         }),
         new winston.transports.File({
             level: 'info',
