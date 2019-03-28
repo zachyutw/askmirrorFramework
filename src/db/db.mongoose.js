@@ -7,7 +7,11 @@ const dbMongoose = async () => {
     let DB_PORT = config.DB_PORT;
     let DB_NAME = config.DB_NAME;
     try {
-        await Mongoose.connect(`mongodb://${DB_HOST}:${DB_PORT}/${DB_NAME}`, { useNewUrlParser: true });
+        await Mongoose.connect(`mongodb://${DB_HOST}:${DB_PORT}/${DB_NAME}`, {
+            useCreateIndex: true,
+            useNewUrlParser: true,
+            useFindAndModify: false
+        });
         logger.info('Connected to mongo!!!');
         // combineSeeds();
     } catch (err) {

@@ -13,7 +13,7 @@ const options = {
 
 const server = http.createServer(app);
 server.listen(config.PORT, () => {
-    logger.info('server started - ' + config.DOMAIN);
+    logger.info('server started - ' + config.SERVER_DOMAIN);
 });
 
 const serverHttps = spdy.createServer(options, app).listen(config.SSL_PORT, (error) => {
@@ -21,6 +21,6 @@ const serverHttps = spdy.createServer(options, app).listen(config.SSL_PORT, (err
         console.error(error);
         return process.exit(1);
     } else {
-        logger.info('https server started - ' + config.SSL_DOMAIN);
+        logger.info('https server started - ' + config.SSL_SERVER_DOMAIN);
     }
 });

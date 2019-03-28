@@ -2,8 +2,8 @@ import * as winston from 'winston';
 import config from '../../config';
 import * as fs from 'fs';
 
-const { logName, logFileDir, errorLogName } = config;
-const dir = config.logFileDir;
+const { LOG_NAME, LOG_FILE_DIR, ERROR_LOG_NAME } = config;
+const dir = config.LOG_FILE_DIR;
 if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir);
 }
@@ -19,12 +19,14 @@ let logger = new winston.createLogger({
         new winston.transports.Console({
             level: 'debug',
             handleExceptions: true,
+            format: winston.format.simple(),
             colorize: true
         }),
+
         new winston.transports.File({
             level: 'error',
-            dirname: logFileDir,
-            filename: errorLogName,
+            dirname: LOG_FILE_DIR,
+            filename: ERROR_LOG_NAME,
             json: true,
             maxsize: 20971520, //20MB
             maxFiles: 25
@@ -32,8 +34,8 @@ let logger = new winston.createLogger({
         new winston.transports.File({
             level: 'info',
             json: true,
-            filename: logName,
-            dirname: logFileDir,
+            filename: LOG_NAME,
+            dirname: LOG_FILE_DIR,
             maxsize: 20971520, //20MB
             maxFiles: 25
         })

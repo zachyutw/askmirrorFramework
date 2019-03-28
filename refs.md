@@ -1,6 +1,7 @@
 ## Express
 * [How To Setup An Express JS Server With Nodemon and Babel](https://medium.com/developer-circles-lusaka/how-to-setup-express-js-server-with-nodemon-and-babel-c3a17218c282)
 * [Setting up a Node development environment](https://developer.mozilla.org/en-US/docs/Learn/Server-side/Express_Nodejs/development_environment)
+* [How to handle errors in Express](https://nemethgergely.com/error-handling-express-async-await/)
 ## Markdown
 1. [Markdown Cheatsheet
 ](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet)
@@ -37,3 +38,11 @@ openssl x509 -req -in dev.askmirror.local.csr -CA myCA.pem -CAkey myCA.key -CAcr
 chmod +x /path/to/yourscript.sh
 /path/to/yourscript.sh 
 ```
+## Security
+* [12 best practices for user account, authorization and password management] (https://cloud.google.com/blog/products/gcp/12-best-practices-for-user-account)
+
+## Regex
+* [正規表示法 Regular Expression (Regex)](https://www.fooish.com/regex-regular-expression/anchors.html)
+
+## Mongoose 
+* [Mongoose schema field names and types with subdocs](https://stackoverflow.com/questions/33568979/mongoose-schema-field-names-and-types-with-subdocs)
