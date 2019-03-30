@@ -10,6 +10,8 @@
 1. [How to test Express.js with Jest and Supertest](http://www.albertgao.xyz/2017/05/24/how-to-test-expressjs-with-jest-and-supertest/)
 2. [Jest CLI Options](https://jestjs.io/docs/en/cli)
 3. [Testing Asynchronous Code](https://jestjs.io/docs/en/asynchronous)
+4. [Concurrent Testing with Mongoose and Jest](https://medium.com/@art.longbottom.jr/concurrent-testing-with-mongoose-and-jest-83a27ceb87ee)
+5. [Build a Unit-Testing Suite with Mocha and Mongoose](https://blog.bitsrc.io/build-a-unit-testing-suite-with-mocha-and-mongoose-eba06c3b3625)
 
 ## Node 
 * [Node Blog](https://nodejs.org/en/blog/)
@@ -46,3 +48,4 @@ chmod +x /path/to/yourscript.sh
 
 ## Mongoose 
 * [Mongoose schema field names and types with subdocs](https://stackoverflow.com/questions/33568979/mongoose-schema-field-names-and-types-with-subdocs)
+

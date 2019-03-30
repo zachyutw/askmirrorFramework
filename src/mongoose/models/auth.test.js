@@ -1,7 +1,7 @@
 import Auth from './auth.model';
 
 import req from 'supertest';
-
+process.env.TEST_SUITE = 'auth-model';
 describe('Read', () => {
     let auths;
 
