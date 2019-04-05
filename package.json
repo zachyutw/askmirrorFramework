@@ -13,13 +13,15 @@
         "npm": "6.4.1"
     },
     "scripts": {
-        "start": "nodemon --exec babel-node src/server.js",
-        "build": "babel src --out-dir dist",
-        "serve": "node dist/server.js",
-        "test": "jest",
+        "start": "NODE_ENV=prod nodemon --exec babel-node src/server.js",
+        "dev": "NODE_ENV=dev nodemon --exec babel-node src/server.js",
+        "build": "NODE_ENV=prod babel src --out-dir dist",
+        "serve": "NODE_ENV=prod node dist/server.js",
+        "test": " NODE_ENV=test jest",
         "shcert": "rootdir=$(pwd) && ./scripts/cert/cert.script.sh ${rootdir} $npm_package_server_domain zachyu.tw@gmail.com"
     },
     "dependencies": {
+        "@babel/runtime": "^7.4.2",
         "axios": "^0.18.0",
         "babel-polyfill": "^6.26.0",
         "body-parser": "^1.18.3",
@@ -33,7 +35,9 @@
         "express-static-gzip": "^1.1.3",
         "faker": "^4.1.0",
         "helmet": "^3.16.0",
+        "jsonwebtoken": "^8.5.1",
         "lodash": "^4.17.11",
+        "moment": "^2.24.0",
         "mongoose": "^5.4.19",
         "mongoose-autopopulate": "^0.9.1",
         "morgan": "^1.9.1",
@@ -54,6 +58,7 @@
         "@babel/cli": "^7.2.3",
         "@babel/core": "^7.3.4",
         "@babel/node": "^7.2.2",
+        "@babel/plugin-transform-runtime": "^7.4.0",
         "@babel/preset-env": "^7.3.4",
         "babel-jest": "^24.5.0",
         "nodemon": "^1.18.10",
@@ -62,7 +67,11 @@
     },
     "jest": {
         "rootDir": "src",
-        "setupFilesAfterEnv": [ "./tests/jest.config.js" ],
-        "testEnvironment": "node"
+        "setupFilesAfterEnv": [
+            "./tests/jest.config.js"
+        ],
+        "testEnvironment": "node",
+        "browser": false,
+        "verbose": true
     }
 }

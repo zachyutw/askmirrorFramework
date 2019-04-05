@@ -6,16 +6,16 @@ import User from './user.model';
 let Model = mongoose.model(collection, AuthSchema);
 Model = withModel(Model);
 
-Model.postItem = async (data, params) => {
-    const user = await User.postItem({ username: data.username });
-    const model = Model({ ...data, user: user.id });
-    const doc = await model.save();
-    let query = Model.findOne({ _id: doc._id });
-    query = queryItemPlugin(query, params);
-    return query.exec();
-};
-
 /**! New Model method put over here **/
+Model.postSignUp = async (data, params) => {
+    const user = await User.postItem({ username: data.username }, params);
+    let auth = null;
+    console.log('123');
+    if (user) {
+        auth = await Model.postItem({ ...data, user: user._id });
+    }
+    return auth;
+};
 
 /**! New Model method put over here **/
 

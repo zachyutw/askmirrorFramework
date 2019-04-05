@@ -1,4 +1,5 @@
 import Auth from '../models/auth.model';
+import User from '../models/user.model';
 import _ from 'lodash';
 import boom from 'boom';
 import withController from './Controller/withController';
@@ -9,14 +10,16 @@ const ModelListName = ModelName + 's';
 let controller = {};
 controller = withController(Model, controller);
 
-controller.postItem = async (req, res, next) => {
-    const item = await Model.postItem(req.body, req.query);
-    res.send({ message: 'success', [ModelName]: item });
-};
 controller.postSignUp = async (req, res, next) => {
-    const item = await Model.postItem(req.body, req.query);
-
+    console.log(req.body);
+    const item = await Model.postSignUp(req.body, req.query);
     res.send({ message: 'sign up success' });
+};
+controller.postSignIn = async (req, res, next) => {
+    if (!req.user) {
+        throw boom.badRequest('auth not success');
+    }
+    res.send({ message: 'sign in success', tokens: req.tokens, user: req.user });
 };
 
 export default controller;

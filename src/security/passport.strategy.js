@@ -3,6 +3,7 @@ import passportJWT from 'passport-jwt';
 import LocalStrategy from 'passport-local';
 import CustomStrategy from 'passport-custom';
 import User from '../mongoose/models/user.model';
+import Auth from '../mongoose/models/auth.model';
 // import Auth from '../models/auth.model';
 import config from '../../config';
 const Passport = () => {
@@ -16,19 +17,35 @@ const Passport = () => {
             },
             (username, password, cb) => {
                 return Auth.findOne({ username })
-                    .then(
-                        (auth) =>
-                            !auth || !(password === auth.password)
-                                ? cb(null, false, {
-                                      message: 'Incorrect email or password.'
-                                  })
-                                : cb(null, auth.toObject(), {
-                                      message: 'Logged In Successfully'
-                                  })
-                    )
+                    .then((auth) => {
+                        return !auth || !(password === auth.password)
+                            ? cb(null, false, {
+                                  message: 'Incorrect email or password.'
+                              })
+                            : cb(null, auth.user, {
+                                  message: 'Logged In Successfully'
+                              });
+                    })
                     .catch((err) => cb(err));
             }
         )
+    );
+    passport.use(
+        'custom-strategy',
+        new CustomStrategy((req, done) => {
+            const { password, ...rest } = req.body;
+            return Auth.findOne(rest)
+                .then((auth) => {
+                    return !auth || !(password === auth.password)
+                        ? cb(null, false, {
+                              message: 'Incorrect email or password.'
+                          })
+                        : cb(null, auth.user, {
+                              message: 'Logged In Successfully'
+                          });
+                })
+                .catch((err) => cb(err));
+        })
     );
     passport.use(
         'openId-strategy',
@@ -52,51 +69,6 @@ const Passport = () => {
                         message: 'Sign In Success'
                     }
                 );
-            } catch (err) {
-                return done(err);
-            }
-        })
-    );
-    passport.use(
-        'custom-strategy',
-        new CustomStrategy(async (req, done) => {
-            try {
-                const { username, email, phoneNumber, password } = req.body;
-                let auth;
-                let user;
-                if (username) {
-                    auth = await Auth.findOne({
-                        username
-                    });
-                } else if (email) {
-                    user = await User.findOne({
-                        email
-                    });
-                    auth = await Auth.findOne({
-                        user: user._id
-                    });
-                } else if (phoneNumber) {
-                    user = await User.findOne({
-                        phone: phoneNumber
-                    });
-                    auth = await Auth.findOne({
-                        user: user_id
-                    });
-                }
-                // console.log(auth);
-                if (!auth) {
-                    return done(null, false, {
-                        error: true,
-                        errorMessage: 'not correct format'
-                    });
-                } else if (!(password === auth.password)) {
-                    return cb(null, false, {
-                        message: 'Incorrect email or password.'
-                    });
-                }
-                return done(null, auth.toObject(), {
-                    message: 'Sign In Success'
-                });
             } catch (err) {
                 return done(err);
             }

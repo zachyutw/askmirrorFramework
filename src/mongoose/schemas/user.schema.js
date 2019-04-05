@@ -10,7 +10,7 @@ const UserSchema = Schema(
         image: SchemasTypes.imageType,
         name: { type: String, default: 'New User' },
         tags: { type: [ String ], index: true },
-        detail: { type: SchemasTypes.userDetail },
+        detail: SchemasTypes.userDetail,
         contact: SchemasTypes.contactType
     },
     { collection: collection, timestamps: true }

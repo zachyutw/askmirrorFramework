@@ -1,5 +1,4 @@
 import express from 'express';
-import 'babel-polyfill';
 import bodyParser from 'body-parser';
 import cookieSession from 'cookie-session';
 import passport from 'passport';
@@ -7,8 +6,9 @@ import morgan from 'morgan';
 import dbMongoose from './db/db.mongoose';
 import path from 'path';
 import errorHandler from './handlers/error.handler';
+
 // import socketIo from './services/socketIo';
-// import Passport from './services/passport';
+import Passport from './security/passport.strategy';
 import router from './routes/router';
 import cors from 'cors';
 import dotenv from 'dotenv';
@@ -49,11 +49,29 @@ app.use(
     })
 );
 
-// Passport();
+Passport();
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(crosSecurity);
 app.options('*', crosSecurity);
+app.use((req, res, next) => {
+    let sourceConnection = {};
+    sourceConnection['user-agent'] = req.headers['user-agent'];
+    sourceConnection['host'] = req.headers['host'];
+    sourceConnection['ip'] = req.headers['x-real-ip'] || req.connection['remoteAddress'];
+    sourceConnection['x-forwarded-for'] = req.headers['x-forwarded-for'];
+    req.sourceConnection = sourceConnection;
+    next();
+});
+app.use('/api/*', (req, res, next) => {
+    logger.info({
+        message: 'API Request',
+        originalUrl: req.originalUrl,
+        method: req.method,
+        source: req.sourceConnection
+    });
+    next();
+});
 router(app);
 app.use(errorHandler);
 app.use('/', express.static(path.resolve(config.ROOT_DIRECTORY, 'client', 'build'), { maxAge: 60 * 60 * 3 }));

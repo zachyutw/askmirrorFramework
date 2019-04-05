@@ -13,8 +13,8 @@ export const asyncErrorMiddleware = (fn) => (req, res, next) => {
 };
 
 const errorHandler = (error, req, res, next) => {
-    logger.error(error.message);
     console.log(error);
+    logger.error({ message: error.message, source: req.sourceConnection });
     if (error.name === 'ValidationError') {
         return res.status(400).send({
             domain: config.DOMAIN,

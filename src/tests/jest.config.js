@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
-import '../mongoose/models/auth.model';
-import '../mongoose/models/user.model';
+mongoose.Promise = global.Promise;
+
 beforeEach((done) => {
     const clearMongoDB = () => {
         for (var i in mongoose.connection.collections) {

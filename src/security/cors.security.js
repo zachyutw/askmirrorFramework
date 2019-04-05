@@ -1,5 +1,5 @@
 import cors from 'cors';
-const whitelist = [ 'http://localhost:8080', 'http://localhost:3000' ];
+const whitelist = [ 'http://localhost:8080', 'http://localhost:3000', 'https://www.google.com' ];
 const corsOptionsDelegate = function (req, callback){
     let corsOptions;
     if (whitelist.indexOf(req.header('Origin')) !== -1) {

@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import mongoose from 'mongoose';
-import 'babel-polyfill';
+import faker from 'faker';
 export const getQueryIds = (ids) => _.chain(ids).split(',').map((id) => mongoose.Types.ObjectId(id)).value();
 export const getQuerySort = (sort) =>
     _.chain(sort)
@@ -75,17 +75,20 @@ export const queryListPlugin = (query, params, Model) => {
     });
     return query;
 };
+
 export default (Model) => {
     Model.schemaKeysMap = _.keys(Model.schema.paths).reduce((prev, current) => {
         prev[current] = Model.schema.paths[current].instance;
         return prev;
     }, {});
-    Model.getList = (params) => {
+
+    const getList = (params) => {
         let query = Model.find({});
         query = queryListPlugin(query, params, Model);
         return query.exec();
     };
-    Model.postList = async (datas, params = {}) => {
+    Model.getList = getList;
+    const postList = async (datas, params = {}) => {
         const newDatas = await Promise.all(
             _.map(datas, (data) => {
                 return Model(data);
@@ -105,7 +108,8 @@ export default (Model) => {
             return listSaved;
         }
     };
-    Model.deleteList = (params) => {
+    Model.postList = postList;
+    const deleteList = (params) => {
         const { all, ids } = params;
         if (all) {
             Model.collection.drop();
@@ -123,13 +127,16 @@ export default (Model) => {
             }
         }
     };
-    Model.getListCount = (params) => {
+    Model.deleteList = deleteList;
+
+    const getListCount = (params) => {
         const count = Model.countDocuments(params);
         return count;
     };
-    Model.getSchema = () => {
+    Model.getListCount = getListCount;
+    const getSchema = () => {
         const paths = Model.schema.paths;
-        let type = _.keys(paths).reduce((prev, current) => {
+        let schemaType = _.keys(paths).reduce((prev, current) => {
             if (current.indexOf('.') > 0) {
                 const indexName = _.head(current.split('.'));
                 const obj = createObj(current, paths[current].instance);
@@ -138,34 +145,73 @@ export default (Model) => {
             }
             return { ...prev, ...createObj(current, paths[current].instance) };
         }, {});
-        type.id = type._id;
-        type = _.omit(type, [ '_id', '__v' ]);
+        schemaType.id = schemaType._id;
+        schemaType = _.omit(schemaType, [ '_id', '__v' ]);
 
-        return type;
+        return schemaType;
     };
-    Model.postItem = async (data, params) => {
+    Model.getSchema = getSchema;
+    const postItem = async (data, params) => {
         const model = Model(data);
         const doc = await model.save();
         let query = Model.findOne({ _id: doc._id });
         query = queryItemPlugin(query, params);
         return query.exec();
     };
-    Model.getItem = (conditions, params) => {
+    Model.postItem = postItem;
+    const getItem = (conditions, params) => {
         let query = Model.findOne(conditions);
         query = queryItemPlugin(query, params);
         return query.exec();
     };
-    Model.putItem = (conditions, data, params) => {
+    Model.getItem = getItem;
+    const putItem = (conditions, data, params) => {
         let query = Model.findOneAndUpdate(conditions, data);
         query.setOptions({ new: true });
         query = queryItemPlugin(query, params);
         return query.exec();
     };
-    Model.deleteItem = async (conditions, params) => {
+    Model.putItem = putItem;
+    const deleteItem = async (conditions, params) => {
         let doc = await Model.findOneAndRemove(conditions);
         return doc;
     };
+    Model.deleteItem = deleteItem;
+    const factoryCreate = (refs = {}) => {
+        const schemaInstance = getSchema();
+        const keys = _.keys(schemaInstance);
+        let instance = schemaInstance;
+        keys.map((key) => {
+            if (key === 'id' || key === 'updatedAt' || key === 'createdAt' || key === 'isActived') {
+                instance = _.omit(instance, key);
+            } else if (instance[key] === 'String') {
+                if (key === 'username') {
+                    instance[key] = faker.internet.userName();
+                } else if (key === 'password') {
+                    instance[key] = 1234;
+                } else if (key === 'email') {
+                    instance[key] = faker.internet.email();
+                } else {
+                    instance[key] = faker.lorem.words(2);
+                }
+            } else if (key === 'image') {
+                instance[key] = {
+                    photoUrl: faker.image.imageUrl(300, 500, 'food', true, true),
+                    thumbUrl: faker.image.imageUrl(300, 500, 'food', true, true),
+                    tags: [ 'fake' ]
+                };
+            } else if (instance[key] === 'ObjectID') {
+                if (refs[key]) {
+                    instance[key] = refs[key];
+                }
+            } else {
+                instance = _.omit(instance, key);
+            }
+        });
 
+        return instance;
+    };
+    Model.factoryCreate = factoryCreate;
     Model.schema.set('toJSON', {
         transform: function (doc, ret, options){
             console.log(doc);
