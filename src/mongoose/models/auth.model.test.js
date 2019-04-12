@@ -14,7 +14,7 @@ describe('Auth Model Testing', () => {
 
     test('Schema', async () => {
         const schema = await Auth.getSchema();
-        const _schema = factory.createData(schema, { user: '123' });
+        const _schema = factory.createData(schema, { user: '1234' });
         expect(typeof _schema.password).toEqual('number');
     });
 });

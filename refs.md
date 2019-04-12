@@ -49,3 +49,12 @@ chmod +x /path/to/yourscript.sh
 ## Mongoose 
 * [Mongoose schema field names and types with subdocs](https://stackoverflow.com/questions/33568979/mongoose-schema-field-names-and-types-with-subdocs)
 
+## Email Tempalte
+* [HTML Email Basics](https://templates.mailchimp.com/getting-started/html-email-basics/)
+### React Template Email
+* [How to build emails with React](https://building.lang.ai/how-to-build-emails-with-react-fcf941b125d1)
+* [Why We Created An Email System Using React](https://paddle.com/blog/why-we-created-an-email-system-using-react/)
+* [Ideas Behind Responsive Emails](https://css-tricks.com/ideas-behind-responsive-emails/)
+
+### React EmailVerify 
+* (react-emailify)[https://github.com/acro5piano/react-emailify]

@@ -1,4 +1,5 @@
 import express from 'express';
+
 import bodyParser from 'body-parser';
 import cookieSession from 'cookie-session';
 import passport from 'passport';
@@ -6,11 +7,10 @@ import morgan from 'morgan';
 import dbMongoose from './db/db.mongoose';
 import path from 'path';
 import errorHandler from './handlers/error.handler';
-
+// import logSchedule from './schedule/log.schedule';
 // import socketIo from './services/socketIo';
-import Passport from './security/passport.strategy';
+import { loadPassportStrategy } from './security/passport.strategy';
 import router from './routes/router';
-import cors from 'cors';
 import dotenv from 'dotenv';
 import crosSecurity from './security/cors.security';
 import expressStaticGzip from 'express-static-gzip';
@@ -40,16 +40,15 @@ app.use(
         }
     })
 );
-app.use(
-    cookieSession({
-        name: 'session',
-        //! d    hh    mm  ss
-        maxAge: 24 * 60 * 60 * 1000, // 24 hours
-        keys: [ config.SESSION_SECRET ]
-    })
-);
-
-Passport();
+// app.use(
+//     cookieSession({
+//         name: 'session',
+//         //! d    hh    mm  ss
+//         maxAge: 24 * 60 * 60 * 1000, // 24 hours
+//         keys: [ config.SESSION_SECRET ]
+//     })
+// );
+loadPassportStrategy();
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(crosSecurity);
@@ -63,6 +62,7 @@ app.use((req, res, next) => {
     req.sourceConnection = sourceConnection;
     next();
 });
+
 app.use('/api/*', (req, res, next) => {
     logger.info({
         message: 'API Request',

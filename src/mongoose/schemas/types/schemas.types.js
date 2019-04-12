@@ -9,7 +9,10 @@ const emailType = {
 const providerType = {
     email: emailType,
     photoURL: { type: String },
-    displayName: { type: String }
+    displayName: { type: String },
+    id: { type: String },
+    accessToken: { type: String },
+    refreshToken: { type: String }
 };
 
 const imageType = {

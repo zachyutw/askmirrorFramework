@@ -22,4 +22,17 @@ controller.postSignIn = async (req, res, next) => {
     res.send({ message: 'sign in success', tokens: req.tokens, user: req.user });
 };
 
+controller.getImgur = async (req, res, next) => {
+    if (!req.user) {
+        throw boom.badRequest('auth not success');
+    }
+    res.send({ message: 'sign in success', tokens: req.tokens, user: req.user });
+};
+controller.getGoogle = async (req, res, next) => {
+    console.log(req.user);
+    if (!req.user) {
+        throw boom.badRequest('auth not success');
+    }
+    res.send({ message: 'sign in success', tokens: req.tokens, user: req.user });
+};
 export default controller;

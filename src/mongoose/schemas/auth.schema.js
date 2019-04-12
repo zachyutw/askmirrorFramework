@@ -15,7 +15,8 @@ const AuthSchema = Schema(
         provider: {
             google: SchemasTypes.providerType,
             wechat: SchemasTypes.providerType,
-            phone: SchemasTypes.providerType
+            phone: SchemasTypes.providerType,
+            imgur: SchemasTypes.providerType
         },
         role: { type: String, enum: enumRoles, default: 'guest' },
         isActived: {
