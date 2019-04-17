@@ -40,14 +40,14 @@ app.use(
         }
     })
 );
-// app.use(
-//     cookieSession({
-//         name: 'session',
-//         //! d    hh    mm  ss
-//         maxAge: 24 * 60 * 60 * 1000, // 24 hours
-//         keys: [ config.SESSION_SECRET ]
-//     })
-// );
+app.use(
+    cookieSession({
+        name: 'session',
+        //! d    hh    mm  ss
+        maxAge: 24 * 60 * 60 * 1000, // 24 hours
+        keys: [ config.SESSION_SECRET ]
+    })
+);
 loadPassportStrategy();
 app.use(passport.initialize());
 app.use(passport.session());

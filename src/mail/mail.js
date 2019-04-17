@@ -7,22 +7,9 @@ const transporter = nodemailer.createTransport({
         pass: '1117Yubizach'
     }
 });
-const mail = {
-    from: 'jslandclan@gmail.com',
-    to: 'flyboring@gmail.com',
-    subject: 'Sending Email using Node.js',
-    text: 'That was easy!',
-    cc: '',
-    bcc: '',
-    html: '<p>jslandclan@gmail.com</p>',
-    attachments: []
-};
 
-const createMail = options;
-const mailer = (req, res, next) => {
-    next();
-};
-
+const mailer = async (mail) => await transporter.sendMail(mail);
+export default mailer;
 /**   
  * attachments option in the message object that contains an array of attachment objects.
 

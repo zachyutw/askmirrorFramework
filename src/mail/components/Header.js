@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 const HeaderSC = styled.h1`
     height: 100px;
+    color: #fff;
     @media (max-width: 700px) {
         height: 300px;
     }

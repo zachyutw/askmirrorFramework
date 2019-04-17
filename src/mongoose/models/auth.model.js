@@ -10,7 +10,6 @@ Model = withModel(Model);
 Model.postSignUp = async (data, params) => {
     const user = await User.postItem({ username: data.username }, params);
     let auth = null;
-
     if (user) {
         auth = await Model.postItem({ ...data, user: user._id });
     }

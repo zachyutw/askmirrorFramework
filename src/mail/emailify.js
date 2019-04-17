@@ -3,9 +3,8 @@ import ReactDOMServer from 'react-dom/server';
 import { ServerStyleSheet } from 'styled-components';
 import juice from 'juice';
 
-const HtmlTemplate = ({ body, styles, title }) => `
-<!DOCTYPE html>
-  <html>
+const HtmlTemplate = ({ body, styles, title }) => `<!DOCTYPE html>
+<html>
     <head>
       <title>${title}</title>
       ${styles}

@@ -214,7 +214,7 @@ export default (Model) => {
     Model.factoryCreate = factoryCreate;
     Model.schema.set('toJSON', {
         transform: function (doc, ret, options){
-            console.log(doc);
+            // console.log(doc);
             ret.id = ret._id;
             delete ret._id;
             delete ret.__v;

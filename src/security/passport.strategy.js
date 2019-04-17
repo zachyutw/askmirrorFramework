@@ -7,33 +7,54 @@ import { Strategy as ImgurStrategy } from 'passport-imgur';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import Auth from '../mongoose/models/auth.model';
 // import Auth from '../models/auth.model';
-import JWTTokens from './jwt.security';
-import config from '../../config';
+import JWTSecurity from './jwt.security';
 
 export const passportPass = {};
 
 passportPass.authenticate = (strategyName, options = { session: false }) => (req, res, next) => {
     switch (strategyName) {
         case 'local':
-            passport.authenticate(strategyName, options, (err, user, info) => {
+            passport.authenticate('local', options, (err, auth, info) => {
                 if (err) {
                     next();
                 }
-                req.login(user, (err) => {
-                    req.tokens = JWTTokens(user);
+                const { id, user, role, username } = auth;
+                req.login(auth, (err) => {
+                    req.tokens = JWTSecurity.sign({ id, user, role, username });
                     next();
                 });
             })(req, res, next);
+            break;
         case 'imgur':
-            passport.authenticate('imgur', options, (err, user, info) => {
+            passport.authenticate('imgur', options, (err, auth, info) => {
                 if (err) {
                     next();
                 }
-                req.login(user, (err) => {
-                    req.tokens = JWTTokens(user);
+                const { id, user, role, username } = auth;
+                req.login(auth, (err) => {
+                    req.tokens = JWTSecurity.sign({ id, user, role, username });
                     next();
                 });
             })(req, res, next);
+            break;
+        case 'jwt':
+            try {
+                if (req.headers.authorization) {
+                    const auth = JWTSecurity.verify(req.headers.authorization);
+                    req.user = auth;
+                } else if (req.query.token) {
+                    const auth = JWTSecurity.verify(req.query.token);
+                    console.log(auth);
+                    req.user = auth;
+                } else {
+                    req.user = {};
+                }
+
+                next();
+            } catch (err) {
+                next(err);
+            }
+            break;
     }
 };
 
@@ -49,11 +70,11 @@ export const loadPassportStrategy = () => {
             return Auth.findOne({ username })
                 .then((auth) => {
                     if (!auth || !(password === auth.password)) {
-                        return done(null, false, {
+                        done(null, false, {
                             message: 'Incorrect email or password.'
                         });
                     } else {
-                        return done(null, auth.user, {
+                        done(null, auth, {
                             message: 'Logged In Successfully'
                         });
                     }
@@ -64,10 +85,12 @@ export const loadPassportStrategy = () => {
     const jwtStrategy = new JWTStrategy(
         {
             jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
-            secretOrKey: config.CLIENT_SECRET
+            secretOrKey: process.env.JWT_SECRECT
         },
         (token, done) => {
-            return done(null, token);
+            console.log(token);
+            console.log('jwt');
+            done(null, token);
         }
     );
 
@@ -107,7 +130,7 @@ export const loadPassportStrategy = () => {
             };
             if (_.head(profile.active_emails)) {
                 const auth = await Auth.signUpOrUpdate(query, data);
-                done(null, auth.user);
+                done(null, auth);
             } else {
                 done(null, {});
             }
@@ -137,16 +160,19 @@ export const loadPassportStrategy = () => {
         })
     );
 
-    passport.serializeUser((user, done) => {
+    passport.serializeUser((auth, done) => {
         // console.log(user,"serializeUser")
         // done(null, user.id);
-        console.log(user, 'serializeUser');
-        done(null, user.id);
+        console.log('serializeUser');
+        done(null, auth.id);
     });
 
     passport.deserializeUser((id, done) => {
         console.log(id, 'deserializeUser');
-        done();
+        Auth.findOne({ _id: id }, (err, auth) => {
+            done(err, auth);
+        });
+
         // User.findById(id, function (err, user){
         //     done(err, user);
         // });
