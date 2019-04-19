@@ -1,5 +1,7 @@
 import userRoute from './user.route';
 import authRoute from './auth.route';
+import tplRoute from './tpl.route';
+import crawlerRoute from './crawler.route';
 import boom from 'boom';
 
 /**
@@ -8,6 +10,8 @@ import boom from 'boom';
 const combineRoutes = (app) => {
     app.use(`/api/user`, userRoute);
     app.use(`/api/auth`, authRoute);
+    app.use(`/api/tpl`, tplRoute);
+    app.use(`/api/crawler`, crawlerRoute);
     // app.use(`/api/chatroom`, RESTPlugins.allFunctionsPlugin, chatroom);
     // app.use(`/api/auth`, RESTPlugins.allFunctionsPlugin, auth);
     // app.use(`/api/user`, RESTPlugins.allFunctionsPlugin, user);

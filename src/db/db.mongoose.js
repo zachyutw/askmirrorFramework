@@ -1,11 +1,10 @@
 import Mongoose from 'mongoose';
 import logger from '../logger/logger';
-import config from '../../config';
 
 const dbMongoose = async () => {
-    let DB_HOST = config.DB_HOST;
-    let DB_PORT = config.DB_PORT;
-    let DB_NAME = config.DB_NAME;
+    const DB_HOST = process.env.DB_HOST;
+    const DB_PORT = process.env.DB_PORT;
+    const DB_NAME = process.env.DB_NAME;
     try {
         await Mongoose.connect(`mongodb://${DB_HOST}:${DB_PORT}/${DB_NAME}`, {
             useCreateIndex: true,

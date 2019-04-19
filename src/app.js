@@ -45,7 +45,7 @@ app.use(
         name: 'session',
         //! d    hh    mm  ss
         maxAge: 24 * 60 * 60 * 1000, // 24 hours
-        keys: [ config.SESSION_SECRET ]
+        keys: [ process.env.SESSION_SECRET ]
     })
 );
 loadPassportStrategy();

@@ -1,6 +1,5 @@
 import boom from 'boom';
 import logger from '../logger/logger';
-import config from '../../config';
 import _ from 'lodash';
 
 export const asyncErrorMiddleware = (fn) => (req, res, next) => {
@@ -12,66 +11,49 @@ export const asyncErrorMiddleware = (fn) => (req, res, next) => {
     });
 };
 
-const errorHandler = (error, req, res, next) => {
-    logger.error({ message: error.message, source: req.sourceConnection });
-    switch (error) {
-        case error.isBoom:
-            return res.status(error.output.payload.statusCode).send({
-                domain: config.DOMAIN,
-                timestamp: new Date(),
-                status: error.output.payload.statusCode,
-                message: error.output.payload.message,
-                error: error.output.payload.message
-            });
-        case error.name === 'ValidationError':
-            return res.status(400).send({
-                domain: config.DOMAIN,
-                timestamp: new Date(),
-                status: 400,
-                message: error.message,
-                error: 'Bad Request'
-            });
-        case error.message === 'Failed to deserialize user out of session':
-            return res.status(401).send({
-                domain: config.DOMAIN,
-                timestamp: new Date(),
-                status: 401,
-                message: error.message,
-                error: 'Auth Error'
-            });
-        case error.message === 'Failed to deserialize user out of session':
-            return res.status(401).send({
-                domain: config.DOMAIN,
-                timestamp: new Date(),
-                status: 401,
-                message: error.message,
-                error: 'Auth Error'
-            });
-        case error.code === 'EAUTH':
-            return res.status(401).send({
-                domain: config.DOMAIN,
-                timestamp: new Date(),
-                status: 401,
-                message: error.response,
-                error: 'Auth Error'
-            });
-        case error.name === 'MongoError' && error.code === 11000:
-            return res.status(400).send({
-                domain: config.DOMAIN,
-                timestamp: new Date(),
-                status: 400,
-                message: 'Duplicate  Key',
-                error: 'Bad Request'
-            });
+const errorResponse = ({ error, domain, status }) => {
+    const errorMessageObj = {
+        400: 'Bad Request',
+        401: 'Auth Error',
+        500: 'Internal Server Error'
+    };
+    const getErrorMessage = (status) => (errorMessageObj[status] ? errorMessageObj[status] : errorMessageObj[500]);
+    return {
+        domain,
+        timestamp: new Date(),
+        status,
+        message: error.message,
+        errorMessage: getErrorMessage(status)
+    };
+};
+const errorBoomResponse = ({ error, domain }) => ({
+    domain,
+    timestamp: new Date(),
+    status: error.output.payload.statusCode,
+    message: error.output.payload.message,
+    errorMessage: error.output.payload.message
+});
 
-        default:
-            return res.status(500).send({
-                domain: config.DOMAIN,
-                timestamp: new Date(),
-                status: 500,
-                message: error.message,
-                error: 'Internal Server Error'
-            });
+const errorHandler = (error, req, res, next) => {
+    const domain = process.env.DOMAIN;
+    // console.log(error);
+    logger.error({ message: error.message, source: req.sourceConnection });
+    if (error.isBoom) {
+        const boomError = errorBoomResponse({ error, domain });
+        return res.status(error.output.payload.statusCode).send(boomError);
+    } else if (error.name === 'MongoError' && error.code === 11000) {
+        const duplicateError = errorResponse({ error, domain, status: 400 });
+        return res.status(400).send(duplicateError);
+    } else if (
+        error.message === 'Failed to deserialize user out of session' ||
+        'Failed to deserialize user out of session'
+    ) {
+        const authError = errorResponse({ error, domain, status: 401 });
+        return res.status(401).send(authError);
+    } else {
+        console.log(error);
+        const defaultError = errorResponse({ error, domain, status: 500 });
+        return res.status(500).send(defaultError);
     }
 };
 export default errorHandler;

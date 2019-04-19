@@ -1,9 +1,11 @@
 import * as winston from 'winston';
-import config from '../../config';
 import * as fs from 'fs';
 
-const { LOG_NAME, LOG_FILE_DIR, ERROR_LOG_NAME } = config;
-const dir = config.LOG_FILE_DIR;
+const LOG_NAME = 'infoLog';
+const LOG_FILE_DIR = 'logs';
+const ERROR_LOG_NAME = 'errorLog';
+
+const dir = LOG_FILE_DIR;
 if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir);
 }

@@ -1,22 +1,11 @@
 import path from 'path';
 let config = {};
-export const PORT = 5000;
-export const SSL_PORT = 5001;
-const DOMAIN = 'dev.askmirror.local';
+/**
+ * * 設定root 路徑 
+ * * Config root path  
+ */
 
 config.ROOT_DIRECTORY = path.resolve(__dirname);
 config.LOG_FILE_DIR = path.resolve(__dirname, 'logs');
-config.DOMAIN = DOMAIN;
-config.CLIENT_SECRET = 'qwer1234';
-config.LOG_NAME = 'askmirrorServer.log';
-config.ERROR_LOG_NAME = 'error.log';
-config.SESSION_SECRET = 'qwer1234';
-config.SERVER_DOMAIN = `http://${DOMAIN}:${PORT}`;
-config.SSL_SERVER_DOMAIN = `https://${DOMAIN}:${SSL_PORT}`;
-config.PORT = PORT;
-config.SSL_PORT = SSL_PORT;
-config.DB_HOST = 'localhost';
-config.DB_PORT = '27017';
-config.DB_NAME = 'askmirror';
-config.DEFAULT_IMAGE = 'https://via.placeholder.com/300/09f/fff.png';
+
 export default config;

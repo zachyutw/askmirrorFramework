@@ -3,7 +3,7 @@ import fs from 'fs';
 import spdy from 'spdy';
 import config from '../config';
 import logger from './logger/logger';
-import https from 'https';
+// import https from 'https';
 import http from 'http';
 
 const options = {
@@ -12,15 +12,21 @@ const options = {
 };
 
 const server = http.createServer(app);
-server.listen(config.PORT, () => {
-    logger.info('server started - ' + config.SERVER_DOMAIN);
-});
-
-const serverHttps = spdy.createServer(options, app).listen(config.SSL_PORT, (error) => {
+server.listen(process.env.PORT, (error) => {
     if (error) {
         console.error(error);
         return process.exit(1);
     } else {
-        logger.info('https server started - ' + config.SSL_SERVER_DOMAIN);
+        logger.info('server started - ' + process.env.PORT);
+    }
+});
+
+const serverHttps = spdy.createServer(options, app);
+serverHttps.listen(process.env.SSL_PORT, (error) => {
+    if (error) {
+        console.error(error);
+        return process.exit(1);
+    } else {
+        logger.info('https server started - ' + process.env.SSL_PORT);
     }
 });
