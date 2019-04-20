@@ -1,4 +1,5 @@
 import React, { createContext, useReducer, useMemo, useEffect } from 'react';
+import Joi from 'joi';
 import { apiAxios } from '../../axios/api.axios';
 import {
     getRESTFulAction,
@@ -10,6 +11,20 @@ import {
 } from '../redux/redux.hook';
 const TplAsyncContext = createContext({});
 
+const TplSchema = Joi.object().keys({
+    name: Joi.string(),
+    category: Joi.string(),
+    createdAt: Joi.date(),
+    description: Joi.string(),
+    id: Joi.string(),
+    image: Joi.object().keys({
+        photoUrl: Joi.string(),
+        thumbUrl: Joi.string(),
+        tags: Joi.array().items(Joi.string().optional())
+    }),
+    title: Joi.string(),
+    updatedAt: Joi.date()
+});
 const TplAsyncProviderPre = (props) => {
     const ROUTE_NAME = 'tpl';
     const OBJECT_NAME = 'tpl';
@@ -39,6 +54,7 @@ const TplAsyncProviderPre = (props) => {
                 [OBJECT_NAME]: itemState.item,
                 [OBJECT_NAME + 's']: listState.list,
                 action,
+                TplSchema,
                 itemState,
                 listState
             }}
