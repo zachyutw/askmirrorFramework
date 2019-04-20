@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useState, useEffect, useCallback } from 'react';
 import _ from 'lodash';
 import chroma from 'chroma-js';
 const ThemeContext = createContext({});
@@ -10,11 +10,12 @@ export const ThemeProvider = (props) => {
     const [ theme, setTheme ] = useState({ dark: cssDark, light: cssLight });
     const [ themeColors, setThemeColor ] = useState([]);
 
-    const setCSSTheme = (colors) => {
+    const setCSSTheme = useCallback((colors) => {
         document.documentElement.style.setProperty('--dark', _.head(colors));
         document.documentElement.style.setProperty('--light', _.last(colors));
         colors.map((color, index) => document.documentElement.style.setProperty('--color-' + index, color));
-    };
+    }, []);
+
     useEffect(
         () => {
             const colors = chroma

@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useState, useEffect, useCallback } from 'react';
 import i18next from 'i18next';
 import enLocale from '../../static/locale/en.locale.json';
 import zhTWLocale from '../../static/locale/zh_TW.locale.json';
@@ -14,15 +14,18 @@ export const config = {
 };
 export const LanguageProvider = (props) => {
     const [ state, setState ] = useState({ key: 'langaugeContext', language: 'zh_TW' });
-    const initT = (text) => text;
+    const initT = useCallback((text) => text, []);
     const [ t, setT ] = useState(() => initT);
     useEffect(() => {
         i18next.init(config).then((t) => setT(() => t));
     }, []);
-    const setLanguage = (language) => {
-        i18next.changeLanguage(language).then((t) => setT(() => t));
-        setState((state) => ({ ...state, language }));
-    };
+    const setLanguage = useCallback(
+        (language) => {
+            i18next.changeLanguage(language).then((t) => setT(() => t));
+            setState((state) => ({ ...state, language }));
+        },
+        [ setState ]
+    );
     return <LanguageContext.Provider value={{ t, setLanguage, ...state }}>{props.children}</LanguageContext.Provider>;
 };
 

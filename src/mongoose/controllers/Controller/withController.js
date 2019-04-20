@@ -5,7 +5,7 @@ export const getSchema = (Model) => async (req, res, next) => {
     const modelName = _.lowerCase(Model.collection.name);
     const schemaName = modelName + 'Schema';
     const schema = await Model.getSchema();
-    res.send({ [schemaName]: schema });
+    res.send({ schema });
 };
 
 export const getListCount = (Model) => async (req, res, next) => {
