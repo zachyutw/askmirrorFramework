@@ -1,6 +1,8 @@
 import React, { useContext, useCallback } from 'react';
+// import _ from 'lodash';
 import GlobalContext from '../../../contexts/Global/GlobalContext';
 import TplAsyncContext, { withTplAsync } from '../../../contexts/Tpl/TplAsyncContext';
+import FinalFormTpl from '../../FinalForm/FinalFormTpl/FinalFormTpl';
 import { clickAction } from '../../../contexts/redux/redux.hook';
 import logo from './logo.svg';
 import './AppPage.css';
@@ -13,18 +15,21 @@ const App = (props) => {
     const handleOnToggleLang = () => {
         setLanguage(language === 'zh_TW' ? 'en' : 'zh_TW');
     };
-    // const handleOnColorChange = useCallback(
-    //     () => {
-    //         setTheme({ dark: '#4286f4', light: '#d3d9e2' });
-    //     },
-    //     [ setTheme ]
-    // );
+    const handleOnColorChange = useCallback(
+        () => {
+            setTheme({ dark: '#4286f4', light: '#d3d9e2' });
+        },
+        [ setTheme ]
+    );
     const handleOnClickAction = useCallback((e) => clickAction(e, action), [ action ]);
     console.log(tplAsyncContext);
     return (
         <div className='App'>
             <header className='App-header'>
+                <button onClick={handleOnColorChange}>Theme</button>
                 <img src={logo} className='App-logo' alt='logo' />
+                <FinalFormTpl />
+
                 <button onClick={handleOnClickAction} name='getSchema'>
                     Get Schema
                 </button>

@@ -13,6 +13,8 @@
         "Profile'": "Profile",
         "User": "User",
         "language": "language",
-        "Edit": "Edit"
+        "Edit": "Edit",
+        "Set Titlte": "Set Titlte",
+        "Description": "Description"
     }
 }

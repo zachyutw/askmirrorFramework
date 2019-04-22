@@ -5,12 +5,14 @@
   "dependencies": {
     "chroma-js": "^2.0.3",
     "faker": "^4.1.0",
+    "final-form": "^4.12.0",
     "i18next": "^15.0.9",
     "joi": "^14.3.1",
     "lodash": "^4.17.11",
     "prop-types": "^15.7.2",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
+    "react-final-form": "^4.1.0",
     "react-router-dom": "^5.0.0",
     "react-scripts": "2.1.8"
   },
@@ -28,5 +30,8 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ]
+  ],
+  "devDependencies": {
+    "supertest": "^4.0.2"
+  }
 }
