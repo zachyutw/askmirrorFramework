@@ -18,9 +18,9 @@ export const GlobalProvider = withTheme(withLanguage(GlobalProviderPre));
 
 export const withGlobal = (Componet) => (props) => {
     return (
-        <GlobalProviderPre>
+        <GlobalProvider>
             <Componet {...props} />
-        </GlobalProviderPre>
+        </GlobalProvider>
     );
 };
 

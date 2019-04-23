@@ -1,5 +1,6 @@
 import React, { useContext, useCallback, useMemo } from 'react';
-import { getMetaClassNames } from '../../FinalForm/finalForm';
+
+import { pickByIdentity } from '../../../lib/obj.helper';
 import GlobalContext, { withGlobal } from '../../../contexts/Global/GlobalContext';
 const InputFieldPre = (props) => {
     const {
@@ -7,8 +8,8 @@ const InputFieldPre = (props) => {
         placeholder,
         type,
         name,
-        onChange = (e, data) => console.log(data),
-        value = '',
+        onChange,
+        value,
         input,
         meta = {},
         uncontrol,
@@ -20,34 +21,18 @@ const InputFieldPre = (props) => {
     const globalContext = useContext(GlobalContext);
     const { t } = globalContext;
     const handleOnChange = useCallback((e) => {
-        onChange(e, { name: e.target.name, value: e.target.value });
+        if (onChange) {
+            onChange(e, { name: e.target.name, value: e.target.value });
+        } else if (input) {
+            input.onChange(e.target.value);
+        }
     }, []);
-    const metaClassNames = useMemo(() => getMetaClassNames(meta), [ meta ]);
-    const renderInput = useMemo(
-        () => {
-            if (input) {
-                return <input placeholder={t(placeholder)} name={name} type={type} {...input} />;
-            } else {
-                return (
-                    <input
-                        {...rest}
-                        type={type}
-                        placeholder={t(placeholder)}
-                        name={name}
-                        onChange={handleOnChange}
-                        value={value}
-                    />
-                );
-            }
-        },
-        [ placeholder, name, input, rest, type, value ]
-    );
-
+    const metaClassNames = useMemo(() => pickByIdentity(meta), [ meta ]);
     return (
-        <div className={[ 'field', className, metaClassNames ].join(' ')} style={{ style }}>
+        <div className={[ 'field', className, metaClassNames ].join(' ')} style={{ style }} {...rest}>
             <div className='content'>
                 <label>{t(label)}</label>
-                {renderInput}
+                <input placeholder={t(placeholder)} name={name} type={type} {...input} onChange={handleOnChange} />
             </div>
             <div className='meta' />
         </div>
