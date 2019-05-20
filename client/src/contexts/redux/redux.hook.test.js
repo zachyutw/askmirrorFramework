@@ -1,58 +1,20 @@
-import { itemReducer, initItemState } from './redux.hook';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { restfulReducer, initRestfulState, restfulFields, Controller, dispatchAction } from './redux.hook';
+import App from '../../App';
+import { render, fireEvent, getByTestId } from 'react-testing-library';
+import axios from 'axios';
 import _ from 'lodash';
 
+const testAxios = axios.create({ baseURL: 'https://dev.askmirror.local:5001/api' });
 describe('Auth Model Testing', () => {
-    test('test itemReducer', () => {
-        const item = { title: 'test', name: 'abc', id: 2 };
-        const ajaxActions = [
-            { type: 'setItem', id: 1, item },
-            { type: 'postItem', item },
-            { type: 'getItem', id: 1, item },
-            { type: 'putItem', id: 1, item },
-            { type: 'deleteItem', id: 1 }
-        ];
-
-        const statusActions = [
-            {
-                type: 'start',
-                isLoading: true,
-                success: null,
-                errorMessage: null
-            },
-            {
-                type: 'fail',
-                isLoading: false,
-                success: false,
-                errorMessage: 'error message'
-            }
-        ];
-
-        ajaxActions.map((action) => {
-            const itemState = itemReducer(initItemState, action);
-            if (action.type === 'postItem') {
-                expect(itemState.id).toEqual(2);
-            } else {
-                expect(itemState.id).toEqual(1);
-            }
-            if (action.type === 'deleteItem') {
-                expect(itemState.item).toEqual({});
-            } else {
-                expect(itemState.item).toEqual({ title: 'test', name: 'abc', id: 2 });
-            }
-            expect(itemState.success).toEqual(action.type);
-            expect(itemState.isLoading).toEqual(false);
-        });
-        statusActions.map((action) => {
-            const itemState = itemReducer(initItemState, action);
-            if (action.type === 'start') {
-                expect(itemState.success).toEqual(null);
-                expect(itemState.isLoading).toEqual(true);
-                expect(itemState.errorMessage).toEqual(null);
-            } else if (action.type === 'fail') {
-                expect(itemState.success).toEqual(false);
-                expect(itemState.isLoading).toEqual(false);
-                expect(typeof itemState.errorMessage).toEqual('string');
-            }
-        });
+    test('test node Controller', async () => {
+        const dispatch = (action) => {
+            console.log(action);
+        };
+        const data = await dispatchAction(dispatch, { type: 'getList', name: 'getList', url: 'https://dev.askmirror.local:5001/api/tpl', method: 'get' }, axios);
+        console.log(data);
+        // const { container } = render(<App />);
+        // console.log(container);
     });
 });

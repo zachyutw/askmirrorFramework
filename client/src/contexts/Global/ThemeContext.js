@@ -24,7 +24,7 @@ export const ThemeProvider = (props) => {
             setCSSTheme(colors);
             setThemeColor(colors);
         },
-        [ theme ]
+        [ theme, setCSSTheme ]
     );
 
     return <ThemeContext.Provider value={{ themeColors, setTheme }}>{props.children}</ThemeContext.Provider>;

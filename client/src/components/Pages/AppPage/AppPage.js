@@ -1,17 +1,29 @@
-import React, { useContext, useCallback } from 'react';
-// import _ from 'lodash';
+import React, { useContext, useCallback, useState, useRef, useEffect, useMemo } from 'react';
 import GlobalContext from '../../../contexts/Global/GlobalContext';
 import TplAsyncContext, { withTplAsync } from '../../../contexts/Tpl/TplAsyncContext';
-import FinalFormTpl from '../../FinalForm/FinalFormTpl/FinalFormTpl';
-import { clickAction } from '../../../contexts/redux/redux.hook';
+
+import { DragDropContext } from 'react-beautiful-dnd';
+import { Ref, Embed } from 'semantic-ui-react';
+import ButtonP from '../../App/ButtonP/ButtonP';
+// import FinalFormTpl from '../../FinalForm/FinalFormTpl/FinalFormTpl';
+import s from './AppPage.module.css';
+import InputField from '../../Input/InputField/InputField';
+import snapVideo from '../../../lib/snapVideo';
+import ChatWS from '../../Chat/ChatWS/ChatWS';
 import logo from './logo.svg';
+import delay from '../../../lib/delay';
+// import Camera from '../../Camera/Camera';
+// import io from 'socket.io-client';
 import './AppPage.css';
+import CameraUserMedia from '../../Camera/CameraUserMedia/CameraUserMedia';
+// const socket = io('http://localhost:5000');
 
 const App = (props) => {
     const globalContext = useContext(GlobalContext);
     const { t, language, setLanguage, setTheme } = globalContext;
     const tplAsyncContext = useContext(TplAsyncContext);
-    const { action, tpls } = tplAsyncContext;
+    const { controller = {} } = tplAsyncContext;
+    const fixRef = useRef(null);
     const handleOnToggleLang = () => {
         setLanguage(language === 'zh_TW' ? 'en' : 'zh_TW');
     };
@@ -21,51 +33,39 @@ const App = (props) => {
         },
         [ setTheme ]
     );
-    const handleOnClickAction = useCallback((e) => clickAction(e, action), [ action ]);
+    const handleOnClick = useCallback(
+        (e, { name, value }) => {
+            if (controller[name]) {
+                controller[name](value);
+            }
+        },
+        [ controller ]
+    );
     console.log(tplAsyncContext);
     return (
-        <div className='App'>
-            <header className='App-header'>
-                <button onClick={handleOnColorChange}>Theme</button>
-                <img src={logo} className='App-logo' alt='logo' />
-                <FinalFormTpl />
-
-                <button onClick={handleOnClickAction} name='getSchema'>
-                    Get Schema
-                </button>
-                <button onClick={handleOnClickAction} name='postItem'>
-                    Create{' '}
-                </button>
-                <button onClick={handleOnClickAction} name='getList'>
-                    List {' '}
-                </button>
-
-                <ul>
-                    {tpls.map((item, index) => (
-                        <li key={index} name={item.id}>
-                            {item.title}
-                            <button onClick={handleOnClickAction} name='deleteItem' data-id={item.id}>
-                                Delete {' '}
-                            </button>
-                            <button onClick={handleOnClickAction} name='putItem' data-id={item.id}>
-                                Edit {' '}
-                            </button>
-                            <button onClick={handleOnClickAction} name='getItem' data-id={item.id}>
-                                Detail {' '}
-                            </button>
-                        </li>
-                    ))}
-                </ul>
-                <p>
-                    {t('Edit')} <code onClick={handleOnToggleLang}>src/App.js</code> and save to reload.
-                </p>
-                <h1 className='themeColor'> Test 123 </h1>
-                <a className='App-link' href='https://reactjs.org' target='_blank' rel='noopener noreferrer'>
-                    Learn React
-                </a>
-            </header>
+        <div className={[ 'page', 'App' ].join(' ')}>
+            {/* <CameraUserMedia /> */}
+            <div className='ui container'>
+                <header className='App-header'>
+                    <div ref={fixRef} style={{ position: 'fixed', right: '1em', bottom: '2em' }}>
+                        {/* <ChatWS /> */}
+                    </div>
+                    <ButtonP onClick={handleOnClick} className='content' name='getItem' value={{ id: '5cbacca5ab3cbb954f6555ce' }}>
+                        Click
+                    </ButtonP>
+                    <button onClick={handleOnColorChange}>Theme</button>
+                    <img src={logo} className='App-logo' alt='logo' />
+                    <p>
+                        {t('Edit')} <code onClick={handleOnToggleLang}>src/App.js</code> and save to reload.
+                    </p>
+                    <h1 className='themeColor'> Test 123 </h1>
+                    <a className='App-link' href='https://reactjs.org' target='_blank' rel='noopener noreferrer'>
+                        Learn React
+                    </a>
+                </header>
+            </div>
         </div>
     );
 };
 
-export default React.memo(withTplAsync(App));
+export default withTplAsync(App);

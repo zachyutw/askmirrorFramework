@@ -1,44 +1,34 @@
-import React, { useContext, useCallback, useMemo } from 'react';
-
-import { pickByIdentity } from '../../../lib/obj.helper';
-import GlobalContext, { withGlobal } from '../../../contexts/Global/GlobalContext';
-const InputFieldPre = (props) => {
-    const {
-        label,
-        placeholder,
-        type,
-        name,
-        onChange,
-        value,
-        input,
-        meta = {},
-        uncontrol,
-        className,
-        fieldType,
-        style,
-        ...rest
-    } = props;
-    const globalContext = useContext(GlobalContext);
-    const { t } = globalContext;
-    const handleOnChange = useCallback((e) => {
-        if (onChange) {
-            onChange(e, { name: e.target.name, value: e.target.value });
-        } else if (input) {
-            input.onChange(e.target.value);
-        }
-    }, []);
-    const metaClassNames = useMemo(() => pickByIdentity(meta), [ meta ]);
+import React, { useMemo } from 'react';
+import InputP from '../InputP/InputP';
+import InputTextareaP from '../InputTextareaP/InputTextareaP';
+import InputFieldLayout from '../InputFieldLayout/InputFieldLayout';
+import InputM from '../InputM/InputM';
+import InputItemP from '../InputItemP/InputItemP';
+const InputField = ({ className, style, meta, htmlFor, fieldType, ...rest }) => {
+    const InputRender = useMemo(
+        () => {
+            switch (fieldType) {
+                case 'InputItemListP':
+                    return <InputItemP.List {...rest} />;
+                case 'inputItemP':
+                    return <InputItemP {...rest} />;
+                case 'inputM':
+                    return <InputM {...rest} />;
+                case 'textarea':
+                    return <InputTextareaP {...rest} />;
+                case 'inputP':
+                    return <InputP {...rest} />;
+                default:
+                    return <div />;
+            }
+        },
+        [ fieldType, rest ]
+    );
     return (
-        <div className={[ 'field', className, metaClassNames ].join(' ')} style={{ style }} {...rest}>
-            <div className='content'>
-                <label>{t(label)}</label>
-                <input placeholder={t(placeholder)} name={name} type={type} {...input} onChange={handleOnChange} />
-            </div>
-            <div className='meta' />
-        </div>
+        <InputFieldLayout className={className} style={style} meta={meta} htmlFor={htmlFor}>
+            {InputRender}
+        </InputFieldLayout>
     );
 };
-
-const InputField = withGlobal(React.memo(InputFieldPre));
 
 export default InputField;
