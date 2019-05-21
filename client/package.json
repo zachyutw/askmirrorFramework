@@ -16,6 +16,7 @@
         "jsonwebtoken": "^8.5.1",
         "lodash": "^4.17.11",
         "material-ui-pickers": "^2.2.4",
+        "node-sass": "^4.12.0",
         "prop-types": "^15.7.2",
         "protobufjs": "^6.8.8",
         "react": "^16.8.6",

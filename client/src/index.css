@@ -68,3 +68,12 @@ video.cover {
 .mirror video {
     transform: scaleX(-1);
 }
+.hidden {
+    display: none !important;
+}
+.cotent {
+    display: flex;
+}
+.link {
+    cursor: pointer;
+}

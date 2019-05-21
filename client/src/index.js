@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import 'semantic-ui-css/semantic.min.css';
 import 'video-react/dist/video-react.css';
 import './index.css';
+import './index.scss';
 import uuidv1 from 'uuid/v1';
 
 import * as serviceWorker from './serviceWorker';

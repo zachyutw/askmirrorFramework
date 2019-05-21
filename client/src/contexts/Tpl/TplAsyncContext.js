@@ -1,9 +1,12 @@
-import React, { createContext, useReducer, useMemo, useEffect } from 'react';
+import React, { createContext } from 'react';
 import useRestful from '../../hooks/useRestful';
-const ROUTE_NAME = 'tpl';
+import axios from 'axios';
+const routeName = '/tpl';
+const objectName = 'tpl';
+const restfulAxios = axios.create({ baseURL: 'https://dev.askmirror.local:5001/api' + routeName });
 const TplAsyncContext = createContext({});
 const TplAsyncProviderPre = (props) => {
-    const [ state, controller ] = useRestful('https://dev.askmirror.local:5001/api', ROUTE_NAME);
+    const [ state, controller ] = useRestful(restfulAxios, objectName);
     return <TplAsyncContext.Provider value={{ controller, state }}>{props.children}</TplAsyncContext.Provider>;
 };
 export const TplAsyncProvider = TplAsyncProviderPre;

@@ -11,16 +11,15 @@ export const ThemeProvider = (props) => {
     const [ themeColors, setThemeColor ] = useState([]);
 
     const setCSSTheme = useCallback((colors) => {
-        document.documentElement.style.setProperty('--dark', _.head(colors));
-        document.documentElement.style.setProperty('--light', _.last(colors));
-        colors.map((color, index) => document.documentElement.style.setProperty('--color-' + index, color));
+        document.documentElement.style.setProperty('--dark', _.last(colors));
+        document.documentElement.style.setProperty('--light', _.head(colors));
+        console.log(colors);
+        colors.reverse().map((color, index) => document.documentElement.style.setProperty('--color-' + index, color));
     }, []);
 
     useEffect(
         () => {
-            const colors = chroma
-                .scale([ theme.light.replace(/[#\s]/g, ''), theme.dark.replace(/[#\s]/g, '') ])
-                .colors(5);
+            const colors = chroma.scale([ theme.light.replace(/[#\s]/g, ''), theme.dark.replace(/[#\s]/g, '') ]).colors(5);
             setCSSTheme(colors);
             setThemeColor(colors);
         },

@@ -11,75 +11,25 @@ export const restfulFields = _.values(restfulIField);
 export const restfulReducer = (state, action = {}) => {
     switch (action.type) {
         case 'setList':
-            return {
-                ...state,
-                name: action.name,
-                isLoading: false,
-                list: action.list || [],
-                isSuccess: true
-            };
+            return { ...state, ...action };
         case 'getList':
-            return {
-                ...state,
-                isLoading: false,
-                list: action.list || [],
-                name: action.name,
-                isSuccess: true
-            };
+            return { ...state, ...action };
         case 'postItem':
-            return {
-                ...state,
-                ...action,
-                list: [ action.item, ...state.list ],
-                name: action.name,
-                isSuccess: true
-            };
+            return { ...state, ...action, list: [ action.item, ...state.list ] };
         case 'getItem':
-            return {
-                ...state,
-                ...action,
-                list: _.map(state.list, (item) => (item.id === action.id ? action.item : item)),
-                name: action.name,
-                isSuccess: true
-            };
+            return { ...state, ...action, list: _.map(state.list, (item) => (item.id === action.id ? action.item : item)) };
         case 'putItem':
-            return {
-                ...state,
-                ...action,
-                list: _.map(state.list, (item) => (item.id === action.id ? action.item : item)),
-                name: action.name,
-                isSuccess: true
-            };
+            return { ...state, ...action, list: _.map(state.list, (item) => (item.id === action.id ? action.item : item)) };
         case 'deleteItem':
-            return {
-                ...state,
-                ...action,
-                list: _.reject(state.list, (item) => item.id === action.id),
-                name: action.name,
-                isSuccess: true
-            };
+            return { ...state, ...action, list: _.reject(state.list, (item) => item.id === action.id) };
         case 'setItem':
-            return {
-                ...state,
-                ...action,
-                list: _.map(state.list, (item) => (item.id === action.id ? action.item : item)),
-                name: action.name,
-                isSuccess: true
-            };
+            return { ...state, ...action, list: _.map(state.list, (item) => (item.id === action.id ? action.item : item)) };
         case 'start':
-            return {
-                ...state,
-                name: action.name,
-                isLoading: true,
-                isSuccess: null,
-                errorMessage: null
-            };
+            return { ...state, ...action, errorMessage: null };
         case 'fail':
             return {
                 ...state,
-                name: action.name,
-                isLoading: false,
-                isSuccess: false,
+                ...action,
                 errorMessage: action.errorMessage
             };
         default:
@@ -95,7 +45,7 @@ export const initRestfulState = {
     item: {}
 };
 
-const initRespData = (data, ROUTE_NAME) => {
+const initRespData = (data, objectName) => {
     if (data === null) {
         return {};
     } else if (data === false) {
@@ -113,48 +63,42 @@ const initRespData = (data, ROUTE_NAME) => {
         if (data.name) {
             delete data.name;
         }
-        if (ROUTE_NAME) {
-            if (data[ROUTE_NAME]) {
-                data.item = data[ROUTE_NAME];
-                if (data[ROUTE_NAME].id) {
-                    data.id = data[ROUTE_NAME].id;
+        if (objectName) {
+            if (data[objectName]) {
+                data.item = data[objectName] || {};
+                if (data.item.id) {
+                    data.id = data.item.id;
                 }
-            } else if (data[ROUTE_NAME + 's']) {
-                data.list = data[ROUTE_NAME + 's'];
+                delete data[objectName];
+            } else if (data[objectName + 's']) {
+                data.list = data[objectName + 's'] || [];
+                delete data[objectName + 's'];
             }
         }
         return data;
     }
 };
 
-export const dispatchAction = (dispatch, { type, name, url = '', method }, apiAxios, ROUTE_NAME = '') => (config = {}) => {
+export const dispatchAction = (dispatch, { type, name, url = '', method }, apiAxios, objectName = 'item') => (config = {}) => {
     const { id, data, params, headers } = config;
-    console.log(url);
-    let URL = `${ROUTE_NAME ? '/' + ROUTE_NAME : ''}${url}`;
-    URL = id ? URL + '/' + id : URL;
-    dispatch({ type: 'start', name });
-    return apiAxios({
-        url: URL,
-        data,
-        method,
-        headers,
-        params
-    })
+    let URL = `${url}`;
+    URL = id ? URL + id : URL;
+    dispatch({ type: 'start', name, id, isSuccess: null, isLoading: true });
+    return apiAxios({ url: URL, data, method, headers, params })
         .then((resp) => {
-            let data = initRespData(resp.data, ROUTE_NAME);
-            dispatch({ type, name, id, ...data });
+            let data = initRespData(resp.data, objectName);
+            dispatch({ type, name, id, isSuccess: true, isLoading: false, ...data });
             return resp;
         })
         .catch((err) => {
-            console.log(err);
-            dispatch({ type: 'fail', name, ...err.response.data });
+            dispatch({ type: 'fail', name, id, isSuccess: false, isLoading: false, ...err.response.data });
             return err;
         });
 };
 
-export const Controller = (dispatch, feilds, apiAxios, ROUTE_NAME) => {
+export const Controller = (dispatch, feilds, apiAxios, routeName) => {
     const controller = {};
-    feilds.map((field) => (controller[field.name] = dispatchAction(dispatch, field, apiAxios, ROUTE_NAME)));
+    feilds.map((field) => (controller[field.name] = dispatchAction(dispatch, field, apiAxios, routeName)));
     return controller;
 };
 
