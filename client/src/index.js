@@ -9,14 +9,17 @@ import uuidv1 from 'uuid/v1';
 import * as serviceWorker from './serviceWorker';
 import { BrowserRouter } from 'react-router-dom';
 import { GlobalProvider } from './contexts/Global/GlobalContext';
+import { Provider as AuthProvider } from './contexts/Global/AuthContext';
 import Routes from './routes/Routes';
 sessionStorage.setItem('appId', uuidv1());
 
 ReactDOM.render(
     <BrowserRouter>
-        <GlobalProvider>
-            <Routes />
-        </GlobalProvider>
+        <AuthProvider>
+            <GlobalProvider>
+                <Routes />
+            </GlobalProvider>
+        </AuthProvider>
     </BrowserRouter>,
     document.getElementById('root')
 );

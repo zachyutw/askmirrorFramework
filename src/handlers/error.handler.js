@@ -36,22 +36,21 @@ const errorBoomResponse = ({ error, domain }) => ({
 
 const errorHandler = (error, req, res, next) => {
     const domain = process.env.DOMAIN;
-    // console.log(error);
+    console.log(error);
     logger.error({ message: error.message, source: req.sourceConnection });
-    if (error.isBoom) {
-        const boomError = errorBoomResponse({ error, domain });
-        return res.status(error.output.payload.statusCode).send(boomError);
-    } else if (error.name === 'MongoError' && error.code === 11000) {
+    if (error.name === 'MongoError' && error.code === 11000) {
+        console.error('mongo');
         const duplicateError = errorResponse({ error, domain, status: 400 });
         return res.status(400).send(duplicateError);
-    } else if (
-        error.message === 'Failed to deserialize user out of session' ||
-        'Failed to deserialize user out of session'
-    ) {
+    } else if (error.message === 'Failed to deserialize user out of session' || error.message === 'Failed to deserialize user out of session') {
         const authError = errorResponse({ error, domain, status: 401 });
         return res.status(401).send(authError);
+    } else if (error.isBoom) {
+        console.log('123');
+        const boomError = errorBoomResponse({ error, domain });
+        return res.status(error.output.payload.statusCode).send(boomError);
     } else {
-        console.log(error);
+        console.error('error 500');
         const defaultError = errorResponse({ error, domain, status: 500 });
         return res.status(500).send(defaultError);
     }

@@ -14,9 +14,9 @@ const WSQueueContext = createContext({});
 const token = jwt.sign(user, 'askmirror');
 const CONNECT_URL = 'ws://localhost:5000/ws';
 
-const subcribe = (url, ws) => {
-    ws.send(SocketSubcribe({ url }));
-};
+// const subcribe = (url, ws) => {
+//     ws.send(SocketSubcribe({ url }));
+// };
 export const WSQueueProvider = (props) => {
     const globalContext = useContext(GlobalContext);
     // const [ data, setData ] = useState({});
@@ -39,10 +39,13 @@ export const WSQueueProvider = (props) => {
         [ isActived, isOnline ]
     );
 
-    const subcribe = useCallback((url) => {
-        const socketSubcribe = SocketSubcribe({ url: CONNECT_URL + url });
-        ws.send(socketSubcribe);
-    }, []);
+    const subcribe = useCallback(
+        (url) => {
+            const socketSubcribe = SocketSubcribe({ url: CONNECT_URL + url });
+            ws.send(socketSubcribe);
+        },
+        [ ws ]
+    );
     const sendText = useCallback(
         (text, sendTo) => {
             console.log(text, sendTo);
@@ -54,11 +57,7 @@ export const WSQueueProvider = (props) => {
         [ ws, isConnected ]
     );
 
-    return (
-        <WSQueueContext.Provider value={{ ...wsState, setIsActived, sendText, subcribe }}>
-            {props.children}
-        </WSQueueContext.Provider>
-    );
+    return <WSQueueContext.Provider value={{ ...wsState, setIsActived, sendText, subcribe }}>{props.children}</WSQueueContext.Provider>;
 };
 
 export const withWSQueue = (Component) => (props) => {

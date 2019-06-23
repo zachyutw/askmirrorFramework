@@ -5,20 +5,17 @@ const routeName = '/tpl';
 const objectName = 'tpl';
 const restfulAxios = axios.create({ baseURL: 'https://dev.askmirror.local:5001/api' + routeName });
 const TplAsyncContext = createContext({});
-const TplAsyncProviderPre = (props) => {
+const Provider = (props) => {
     const [ state, controller ] = useRestful(restfulAxios, objectName);
     return <TplAsyncContext.Provider value={{ controller, state }}>{props.children}</TplAsyncContext.Provider>;
 };
-export const TplAsyncProvider = TplAsyncProviderPre;
-
 export const withTplAsync = (Componet) => (props) => {
     return (
-        <TplAsyncProvider>
+        <Provider>
             <Componet {...props} />
-        </TplAsyncProvider>
+        </Provider>
     );
 };
-
 export default TplAsyncContext;
 // const TplSchema = Joi.object().keys({
 //     name: Joi.string(),

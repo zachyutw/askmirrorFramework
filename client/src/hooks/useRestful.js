@@ -1,5 +1,5 @@
-import React, { useReducer, useMemo } from 'react';
-import { Controller, restfulFields, initRestfulState, restfulReducer } from './redux.hook';
+import { useReducer, useMemo } from 'react';
+import { Controller, restfulFields, initRestfulState, restfulReducer } from '../contexts/redux';
 
 const useRestful = (apiAxios, objectName) => {
     const [ state, dispatch ] = useReducer(restfulReducer, initRestfulState);
@@ -8,7 +8,7 @@ const useRestful = (apiAxios, objectName) => {
             const controller = Controller(dispatch, restfulFields, apiAxios, objectName);
             return controller;
         },
-        [ dispatch, apiAxios ]
+        [ dispatch, apiAxios, objectName ]
     );
     return [ state, controller ];
 };

@@ -1,7 +1,7 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback } from 'react';
 import ButtonMenu from '../../Button/ButtonMenu/ButtonMenu';
-import ScreenP from '../../Screen/ScreenP/ScreenP';
-import useToggle from '../../../hooks/useToggle';
+// import ScreenP from '../../Screen/ScreenP/ScreenP';
+// import useToggle from '../../../hooks/useToggle';
 const Navbar = React.memo(() => {
     const handleOnClick = useCallback((e, data) => {
         console.log(data);

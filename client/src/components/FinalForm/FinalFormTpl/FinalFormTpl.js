@@ -2,14 +2,14 @@ import React, { useCallback, useContext } from 'react';
 import _ from 'lodash';
 import GlobalContext from '../../../contexts/Global/GlobalContext';
 import InputField from '../../Input/InputField/InputField';
-import { sleep } from '../../../lib/timeout.helper';
+import { delay } from '../../../lib';
 import { Form, Field } from 'react-final-form';
 import InputItemP from '../../Input/InputItemP/InputItemP';
 import Button from '@material-ui/core/Button';
 import faker from 'faker';
 
 const onSubmit = async (values) => {
-    await sleep(300);
+    await delay(300);
     window.alert(JSON.stringify(values, 0, 2));
 };
 export const fieldObj = {
@@ -56,11 +56,7 @@ const Card = (props) => {
     return <h1>{props.text}</h1>;
 };
 
-const testOptions = [
-    { key: 1, text: 'AAAA', value: 'aaaa' },
-    { key: 1, text: 'BBBB', value: 'bbbb' },
-    { key: 1, text: 'CCCC', value: 'cccc' }
-];
+const testOptions = [ { key: 1, text: 'AAAA', value: 'aaaa' }, { key: 1, text: 'BBBB', value: 'bbbb' }, { key: 1, text: 'CCCC', value: 'cccc' } ];
 
 const itemOptions = _.map(testOptions, (option) => ({ ...option, item: <Card {...option} /> }));
 const InputItemListP = {

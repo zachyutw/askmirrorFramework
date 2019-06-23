@@ -3,7 +3,7 @@ import _ from 'lodash';
 import chroma from 'chroma-js';
 const ThemeContext = createContext({});
 
-export const ThemeProvider = (props) => {
+export const Provider = (props) => {
     const cssDark = window.getComputedStyle(document.documentElement).getPropertyValue('--dark');
     const cssLight = window.getComputedStyle(document.documentElement).getPropertyValue('--light');
 
@@ -31,9 +31,9 @@ export const ThemeProvider = (props) => {
 
 export const withTheme = (Componet) => (props) => {
     return (
-        <ThemeProvider>
+        <Provider>
             <Componet {...props} />
-        </ThemeProvider>
+        </Provider>
     );
 };
 

@@ -77,3 +77,13 @@ video.cover {
 .link {
     cursor: pointer;
 }
+
+.page {
+    min-height: 1500px;
+}
+.item {
+    width: 100%;
+}
+.center {
+    text-align: center;
+}

@@ -1,11 +1,10 @@
 import React, { useMemo, useCallback } from 'react';
-import { pickByIdentity } from '../../lib/obj.helper';
+import { pickByIdentity } from '../../lib';
 
 export const withField = (Component) => (props) => {
-    const { input = {}, className, meta, name, onChange, defaultValue, ...rest } = props;
-
+    const { input = {}, className, meta, name, onChange, onBlur = () => {}, onFocus = () => {}, onClick, defaultValue, ref, ...rest } = props;
     const metaClassNames = useMemo(() => pickByIdentity(meta), [ meta ]);
-    const { onChange: inputOnChange } = input;
+    const { onChange: inputOnChange, onBlur: inputOnBlur, onFocus: inputFocus, ...restInput } = input;
     const handleOnChange = useCallback(
         (e, data) => {
             if (onChange) {
@@ -16,11 +15,24 @@ export const withField = (Component) => (props) => {
         },
         [ inputOnChange, onChange ]
     );
-    return (
-        <Component
-            {...rest}
-            className={[ className, metaClassNames ].join(' ')}
-            input={{ name, value: defaultValue, ...input, onChange: handleOnChange }}
-        />
+    const handleOnBlur = useCallback(
+        (e) => {
+            onBlur(e);
+            if (inputOnBlur) {
+                inputOnBlur(e);
+            }
+        },
+        [ onBlur, inputOnBlur ]
     );
+    const handleOnFocus = useCallback(
+        (e) => {
+            onFocus(e);
+
+            if (inputFocus) {
+                inputFocus(e);
+            }
+        },
+        [ onFocus, inputFocus ]
+    );
+    return <Component {...rest} className={[ className, metaClassNames ].join(' ')} input={{ name, value: defaultValue, ...restInput, onBlur: handleOnBlur, onChange: handleOnChange, onFocus: handleOnFocus, onClick, ref }} />;
 };

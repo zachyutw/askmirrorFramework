@@ -14,10 +14,13 @@ export const passportPass = {};
 passportPass.authenticate = (strategyName, options = { session: false }) => (req, res, next) => {
     switch (strategyName) {
         case 'local':
-            passport.authenticate('local', options, (err, auth, info) => {
+            passport.authenticate('local', options, (err, auth = {}, info) => {
                 if (err) {
+                    console.log(err);
                     next();
                 }
+
+                console.log(auth);
                 const { id, user, role, username } = auth;
                 req.login(auth, (err) => {
                     req.tokens = JWTSecurity.sign({ id, user, role, username });
@@ -44,12 +47,10 @@ passportPass.authenticate = (strategyName, options = { session: false }) => (req
                     req.user = auth;
                 } else if (req.query.token) {
                     const auth = JWTSecurity.verify(req.query.token);
-                    console.log(auth);
                     req.user = auth;
                 } else {
                     req.user = {};
                 }
-
                 next();
             } catch (err) {
                 next(err);
@@ -69,6 +70,7 @@ export const loadPassportStrategy = () => {
         (username, password, done) => {
             return Auth.findOne({ username })
                 .then((auth) => {
+                    console.log(auth);
                     if (!auth || !(password === auth.password)) {
                         done(null, false, {
                             message: 'Incorrect email or password.'
@@ -79,7 +81,10 @@ export const loadPassportStrategy = () => {
                         });
                     }
                 })
-                .catch((err) => done(err));
+                .catch((err) => {
+                    console.log(err);
+                    done(err);
+                });
         }
     );
     const jwtStrategy = new JWTStrategy(
@@ -163,12 +168,10 @@ export const loadPassportStrategy = () => {
     passport.serializeUser((auth, done) => {
         // console.log(user,"serializeUser")
         // done(null, user.id);
-        console.log('serializeUser');
         done(null, auth.id);
     });
 
     passport.deserializeUser((id, done) => {
-        console.log(id, 'deserializeUser');
         Auth.findOne({ _id: id }, (err, auth) => {
             done(err, auth);
         });

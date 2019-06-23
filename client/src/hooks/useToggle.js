@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 
 const useToggle = (initState) => {
     const [ actived, setActived ] = useState(initState);
@@ -6,7 +6,7 @@ const useToggle = (initState) => {
         () => {
             setActived((actived) => !actived);
         },
-        [ toggleActived ]
+        [ setActived ]
     );
     return [ actived, toggleActived, setActived ];
 };

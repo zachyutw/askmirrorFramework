@@ -1,6 +1,7 @@
 import faker from 'faker';
 import _ from 'lodash';
 import jwt from 'jsonwebtoken';
+import { delay } from '../../../lib';
 const userId = sessionStorage.getItem('appId');
 const user = {
     id: userId,
@@ -42,8 +43,6 @@ export const initState = {
     newText: null,
     errorCount: 0
 };
-
-const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export function webSocketConnect (url, isOnline, dispatch){
     const webSocket = new WebSocket(url);

@@ -10,51 +10,69 @@ const Model = Auth;
 const ModelName = _.lowerCase(Model.collection.name);
 const ModelListName = ModelName + 's';
 // let controller = resourcesController(Model, Model.collection.name);
+
+const ServerVerifyMailConfig = (tokens, auth) => {
+    const html = HomeTemplate(
+        {
+            field: {
+                text: 'Please Verify Your Email',
+                href: 'https://dev.askmirror.local:5001/api/auth/email/verify/callback?status=success&method=verifyMail&token=' + tokens.accessToken
+            },
+            greeding: 'Hi ' + auth.user.name + ' Welcome'
+        },
+        { title: 'Verify' }
+    );
+    const verifyMailConfig = {
+        from: ' no-relpy-jslandclan@gmail.com',
+        to: auth.username,
+        subject: 'Sending Email using Node.js',
+        text: 'That was easy!',
+        cc: '',
+        bcc: '',
+        html,
+        attachments: []
+    };
+    return verifyMailConfig;
+};
 let controller = {};
 controller = withController(Model, controller);
 
-controller.postSignUp = async (req, res, next) => {
+controller.deleteItem = async (req, res, next) => {
+    console.log(req.user);
+    res.send({ message: 'success' });
+};
+
+controller.postSignUp = (req, res, next) => {
     // console.log(req.body);
 
     const { username, password } = req.body;
-    const auth = await Model.postSignUp({ username, password }, req.query);
-    let mailInfo = {};
-    if (auth) {
-        const { id, user, role, username } = auth;
-        console.log(auth);
-        const tokens = JWTSecurity.sign({ id, user, role, username }, { role: 'VERIFY_TOKEN' });
-
-        const html = HomeTemplate(
-            {
-                field: {
-                    text: 'Please Verify Your Email',
-                    href:
-                        'https://dev.askmirror.local:5001/api/auth/email/verify/callback?status=success&method=verifyMail&token=' +
-                        tokens.accessToken
-                },
-                greeding: 'Hi ' + auth.user.name + ' Welcome'
-            },
-            { title: 'Verify' }
-        );
-        const verifyMailConfig = {
-            from: ' no-relpy-jslandclan@gmail.com',
-            to: auth.username,
-            subject: 'Sending Email using Node.js',
-            text: 'That was easy!',
-            cc: '',
-            bcc: '',
-            html,
-            attachments: []
-        };
-        mailInfo = await sendMail(verifyMailConfig);
+    if (!password) {
+        next(boom.unauthorized('auth not success require password'));
     }
+    Model.postSignUp({ username, password }, req.query)
+        .then(async (auth) => {
+            console.log(auth);
+            const { id, user, role, username } = auth;
+            const tokens = JWTSecurity.sign({ id, user, role, username }, { role: 'VERIFY_TOKEN' });
+            const verifyMailConfig = ServerVerifyMailConfig(tokens, auth);
+            const mailInfo = await sendMail(verifyMailConfig);
+            res.send({ message: 'sign up success', mailInfo, tokens });
+        })
+        .catch((err) => {
+            console.log(err);
+            const errorStrs = err.message.split(' ');
+            const preIndex = errorStrs.findIndex((str) => str === 'index:');
+            const dupKey = errorStrs[preIndex + 1];
+            next(boom.unauthorized('auth not success duplicate ' + dupKey));
+        });
 
-    res.send({ message: 'sign up success', mailInfo });
+    // next(boom.internal('auth internal error'));
 };
 controller.postSignIn = async (req, res, next) => {
     if (!req.user) {
         throw boom.badRequest('auth not success');
     }
+    console.log(req.tokens);
     return res.send({ message: 'sign in success', tokens: req.tokens, user: req.user.user });
 };
 

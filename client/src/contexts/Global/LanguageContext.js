@@ -13,7 +13,7 @@ export const config = {
         zh_TW: zhTWLocale
     }
 };
-export const LanguageProvider = (props) => {
+export const Provider = (props) => {
     const [ state, setState ] = useState({ key: 'langaugeContext', language: 'zh_TW', languageList });
     const initT = useCallback((text) => text, []);
     const [ t, setT ] = useState(() => initT);
@@ -29,9 +29,9 @@ export const LanguageProvider = (props) => {
 
 export const withLanguage = (Componet) => (props) => {
     return (
-        <LanguageProvider>
+        <Provider>
             <Componet {...props} />
-        </LanguageProvider>
+        </Provider>
     );
 };
 

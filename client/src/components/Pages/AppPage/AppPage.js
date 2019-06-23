@@ -1,7 +1,9 @@
 import React, { useContext, useCallback, useState, useRef, useEffect, useMemo } from 'react';
 import GlobalContext from '../../../contexts/Global/GlobalContext';
 import TplAsyncContext, { withTplAsync } from '../../../contexts/Tpl/TplAsyncContext';
-
+import Layout from '../../App/Layout/Layout';
+import PageP from '../../App/PageP/PageP';
+import SectionP from '../../App/SectionP/SectionP';
 import { DragDropContext } from 'react-beautiful-dnd';
 import { Ref, Embed } from 'semantic-ui-react';
 import ButtonP from '../../App/ButtonP/ButtonP';
@@ -11,7 +13,6 @@ import InputField from '../../Input/InputField/InputField';
 import snapVideo from '../../../lib/snapVideo';
 import ChatWS from '../../Chat/ChatWS/ChatWS';
 import logo from './logo.svg';
-import delay from '../../../lib/delay';
 // import Camera from '../../Camera/Camera';
 // import io from 'socket.io-client';
 import './AppPage.css';
@@ -43,28 +44,32 @@ const App = (props) => {
     );
     console.log(tplAsyncContext);
     return (
-        <div className={[ 'page', 'App' ].join(' ')}>
-            {/* <CameraUserMedia /> */}
-            <div className='ui container'>
-                <header className='App-header'>
-                    <div ref={fixRef} style={{ position: 'fixed', right: '1em', bottom: '2em' }}>
-                        {/* <ChatWS /> */}
+        <Layout>
+            <PageP>
+                {/* <CameraUserMedia /> */}
+                <SectionP toggle>
+                    <div className='ui container'>
+                        <header className='App-header'>
+                            <div ref={fixRef} style={{ position: 'fixed', right: '1em', bottom: '2em' }}>
+                                {/* <ChatWS /> */}
+                            </div>
+                            <ButtonP onClick={handleOnClick} className='content' name='getItem' value={{ id: '5cbacca5ab3cbb954f6555ce' }}>
+                                Click
+                            </ButtonP>
+                            <button onClick={handleOnColorChange}>Theme</button>
+                            <img src={logo} className='App-logo' alt='logo' />
+                            <p>
+                                {t('Edit')} <code onClick={handleOnToggleLang}>src/App.js</code> and save to reload.
+                            </p>
+                            <h1 className='themeColor'> Test 123 </h1>
+                            <a className='App-link' href='https://reactjs.org' target='_blank' rel='noopener noreferrer'>
+                                Learn React
+                            </a>
+                        </header>
                     </div>
-                    <ButtonP onClick={handleOnClick} className='content' name='getItem' value={{ id: '5cbacca5ab3cbb954f6555ce' }}>
-                        Click
-                    </ButtonP>
-                    <button onClick={handleOnColorChange}>Theme</button>
-                    <img src={logo} className='App-logo' alt='logo' />
-                    <p>
-                        {t('Edit')} <code onClick={handleOnToggleLang}>src/App.js</code> and save to reload.
-                    </p>
-                    <h1 className='themeColor'> Test 123 </h1>
-                    <a className='App-link' href='https://reactjs.org' target='_blank' rel='noopener noreferrer'>
-                        Learn React
-                    </a>
-                </header>
-            </div>
-        </div>
+                </SectionP>
+            </PageP>
+        </Layout>
     );
 };
 

@@ -1,8 +1,7 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import _ from 'lodash';
 import s from './CameraUserMedia.module.css';
-import delay from '../../../lib/delay';
-import snapVideo from '../../../lib/snapVideo';
+import { delay, snapVideo } from '../../../lib';
 import useUserMedia from '../hooks/useUserMedia.hook';
 import ButtonP from '../../App/ButtonP/ButtonP';
 
@@ -78,9 +77,7 @@ const Camera = ({ onChange = (e, data) => console.log(data) }) => {
                         <img className='cover' src={snapImageUrl} alt={snapImageUrl} />
                     </div>
                 )}
-                <div className={s.btns}>
-                    {controlFields.map((field, index) => <ButtonP onChange={handleOnClick} key={index} {...field} />)}
-                </div>
+                <div className={s.btns}>{controlFields.map((field, index) => <ButtonP onChange={handleOnClick} key={index} {...field} />)}</div>
 
                 <video ref={videoRef} id='localVideo' playsInline autoPlay muted className='cover' />
             </div>

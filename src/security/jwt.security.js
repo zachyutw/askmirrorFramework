@@ -12,7 +12,7 @@ const JWTSecurity = {};
  * @param {string} config.role ENUM | USER, VERIFY
  * @param {number} config.expiresIn expire time 
  */
-const sign = (payload = {}, config = { role: String, expiresIn: Number }) => {
+const sign = (payload = {}, config = {}) => {
     let expiresIn = 60 * 60 * 24 * 3;
     if (config.expiresIn) {
         expiresIn = config.expiresIn;

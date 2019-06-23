@@ -1,20 +1,34 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useReducer } from 'react';
 
-const userCamera = ({ onChange = (e, data) => console.log(data), constraints }) => {
-    navigator.mediaDevices
-        .getUserMedia(constraints)
-        .then((stream) => {
-            // videoRef.current.srcObject = stream;
-            onChange(null, { name: 'stream', value: stream });
-            return navigator.mediaDevices.enumerateDevices();
-        })
-        .then((deviceInfos) => {
-            onChange(null, { name: 'deviceInfo', value: deviceInfos });
-        })
-        .catch((err) => console.log(err));
+const userCamera = (dispatch) => (constraints) => {
+    if (navigator.mediaDevices) {
+        navigator.mediaDevices
+            .getUserMedia(constraints)
+            .then((stream) => {
+                // videoRef.current.srcObject = stream;
+                dispatch({ type: 'success', stream, enumerateDevices: navigator.mediaDevices.enumerateDevices() });
+            })
+            .then((deviceInfos) => {
+                dispatch({ type: 'deviceInfos', deviceInfos });
+            })
+            .catch((err) => {
+                dispatch({ type: 'fail', errorMessage: err.message });
+            });
+    } else {
+        dispatch({ type: 'fail', errorMessage: 'navigator.mediaDevices not found' });
+    }
+};
+const reducer = (state, action) => {
+    switch (action.type) {
+        default:
+            return { ...state };
+    }
 };
 const useCamera = (config) => {
+    const [ state, dispatch ] = useReducer(reducer, { stream: null, deviceInfo: null });
+
     const [ camera, setCamera ] = useState({ stream: null, deviceInfo: null });
-    useEffect(() => {}, [ config ]);
-    return camera;
+    return [ state ];
 };
+
+export default useCamera;
