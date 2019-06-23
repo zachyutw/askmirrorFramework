@@ -8,12 +8,13 @@
     "server": {
         "domain": "dev.askmirror.local"
     },
+    "type": "module",
     "engines": {
-        "node": "10.15.3",
-        "npm": "6.4.1"
+        "node": "12.4.0",
+        "npm": "6.9.0"
     },
     "scripts": {
-        "start": "NODE_ENV=prod nodemon --ignore './client/' --exec babel-node  src/server.js",
+        "start": "NODE_ENV=prod nodemon --ignore './client/'   src/server.js",
         "dev": "NODE_ENV=dev nodemon --ignore './client/' --exec babel-node src/server.js",
         "build": "NODE_ENV=prod babel src --out-dir dist",
         "serve": "NODE_ENV=prod node dist/server.js",
