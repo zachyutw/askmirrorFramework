@@ -1,5 +1,4 @@
 import schedule from 'node-schedule';
-import axios from 'axios';
 import command from '../command/command';
 
 export const job = schedule.scheduleJob('*/5 * * * * *', async () => {
