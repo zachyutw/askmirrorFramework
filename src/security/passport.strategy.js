@@ -1,15 +1,14 @@
-import passport from 'passport';
-import passportJWT from 'passport-jwt';
-import _ from 'lodash';
-import LocalStrategy from 'passport-local';
-import CustomStrategy from 'passport-custom';
-import { Strategy as ImgurStrategy } from 'passport-imgur';
-import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
-import Auth from '../mongoose/models/auth.model';
-// import Auth from '../models/auth.model';
-import JWTSecurity from './jwt.security';
+const passport = require('passport');
+const passportJWT = require('passport-jwt');
+const _ = require('lodash');
+const LocalStrategy = require('passport-local');
+const CustomStrategy = require('passport-custom/lib');
+const ImgurStrategy = require('passport-imgur/lib/passport-imgur').Strategy;
+// const GoogleStrategy = require('passport-google-oauth20').OAuthStrategy;
+const Auth = require('../mongoose/models/auth.model');
+const JWTSecurity = require('./jwt.security');
 
-export const passportPass = {};
+const passportPass = {};
 
 passportPass.authenticate = (strategyName, options = { session: false }) => (req, res, next) => {
     switch (strategyName) {
@@ -59,7 +58,7 @@ passportPass.authenticate = (strategyName, options = { session: false }) => (req
     }
 };
 
-export const loadPassportStrategy = () => {
+const loadPassportStrategy = () => {
     const JWTStrategy = passportJWT.Strategy;
     const ExtractJWT = passportJWT.ExtractJwt;
     const localStragey = new LocalStrategy(
@@ -99,19 +98,19 @@ export const loadPassportStrategy = () => {
         }
     );
 
-    const googleStrategy = new GoogleStrategy(
-        {
-            clientID: process.env.GOOGLE_CLIENT_ID,
-            clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-            callbackURL: process.env.HTTPS_DOMAIN_API + '/auth/google/callback'
-        },
-        function (accessToken, refreshToken, profile, done){
-            console.log(accessToken);
-            console.log(refreshToken);
-            console.log(profile);
-            done(null, {});
-        }
-    );
+    // const googleStrategy = new GoogleStrategy(
+    //     {
+    //         clientID: process.env.GOOGLE_CLIENT_ID,
+    //         clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    //         callbackURL: process.env.HTTPS_DOMAIN_API + '/auth/google/callback'
+    //     },
+    //     function (accessToken, refreshToken, profile, done){
+    //         console.log(accessToken);
+    //         console.log(refreshToken);
+    //         console.log(profile);
+    //         done(null, {});
+    //     }
+    // );
     const imgurStrategy = new ImgurStrategy(
         {
             clientID: process.env.IMGUR_CLIENT_ID,
@@ -144,7 +143,7 @@ export const loadPassportStrategy = () => {
     passport.use(localStragey);
     passport.use(jwtStrategy);
     passport.use(imgurStrategy);
-    passport.use(googleStrategy);
+    // passport.use(googleStrategy);
     passport.use(
         'local-login',
         new CustomStrategy((req, done) => {
@@ -183,5 +182,6 @@ export const loadPassportStrategy = () => {
         // console.log(id);
     });
 };
-
-export default passportPass;
+passportPass.loadPassportStrategy = loadPassportStrategy;
+module.exports = passportPass;
+// module.exports =  passportPass;

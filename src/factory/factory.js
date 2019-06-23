@@ -1,5 +1,5 @@
-import faker from 'faker';
-import _ from 'lodash';
+const faker =require( 'faker');
+const _ =require( 'lodash');
 const createData = (schema, refs = {}) => {
     const keys = _.keys(schema);
     let _schema = schema;
@@ -37,4 +37,4 @@ const createData = (schema, refs = {}) => {
 
 const factory = {};
 factory.createData = createData;
-export default factory;
+module.exports =  factory;

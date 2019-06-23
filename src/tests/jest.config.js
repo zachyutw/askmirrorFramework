@@ -1,4 +1,5 @@
-import mongoose from 'mongoose';
+// const mongoose =require( 'mongoose');
+const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 
 beforeEach((done) => {

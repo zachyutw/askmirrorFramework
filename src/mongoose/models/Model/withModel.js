@@ -1,6 +1,6 @@
-import _ from 'lodash';
-import mongoose from 'mongoose';
-import faker from 'faker';
+const _ =require( 'lodash');
+const mongoose =require( 'mongoose');
+const faker =require( 'faker');
 export const getQueryIds = (ids) => _.chain(ids).split(',').map((id) => mongoose.Types.ObjectId(id)).value();
 export const getQuerySort = (sort) =>
     _.chain(sort)
@@ -76,7 +76,7 @@ export const queryListPlugin = (query, params, Model) => {
     return query;
 };
 
-export default (Model) => {
+module.exports =  (Model) => {
     Model.schemaKeysMap = _.keys(Model.schema.paths).reduce((prev, current) => {
         prev[current] = Model.schema.paths[current].instance;
         return prev;

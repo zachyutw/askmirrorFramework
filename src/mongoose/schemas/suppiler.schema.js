@@ -1,9 +1,9 @@
-import mongoose from 'mongoose';
-import _ from 'lodash';
-import SchemasTypes from './types/schemas.types';
+const mongoose = require('mongoose');
+const _ = require('lodash');
+const SchemasTypes = require('./types/schemas.types');
 const { Schema } = mongoose;
-export const collection = 'Suppiler';
-const SuppilerSchema = Schema(
+const collectionName = `Suppiler`;
+const schema = Schema(
     {
         name: { type: String, required: true, index: true },
         category: { type: String, default: 'default', index: true },
@@ -11,8 +11,8 @@ const SuppilerSchema = Schema(
         tags: { type: [ String ] },
         contact: SchemasTypes.contactType
     },
-    { collection: collection, timestamps: true }
+    { collection: collectionName, timestamps: true }
 );
-SuppilerSchema.index({ category: 1 });
-
-export default SuppilerSchema;
+schema.index({ category: 1 });
+schema.collectionName = collectionName;
+module.exports = schema;

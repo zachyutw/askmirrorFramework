@@ -1,15 +1,24 @@
-import app from './app';
-import fs from 'fs';
-import _ from 'lodash';
-import spdy from 'spdy';
-import config from '../config';
-import logger from './logger/logger';
-// import https from 'https';
-import http from 'http';
-import jwt from 'jsonwebtoken';
-import expressWs from 'express-ws';
-import socketServer from './socket/socketServer';
-import WSRouter from './wsRouter/wsRouter';
+const app = require('./app');
+const fs = require('fs');
+const _ = require('lodash');
+const spdy = require('spdy');
+const config = require('../config');
+const logger = require('./logger/logger');
+const http = require('http');
+const jwt = require('jsonwebtoken');
+const expressWs = require('express-ws');
+const socketServer = require('./socket/socketServer');
+
+// const app =require( './app');
+// const fs =require( 'fs');
+// const _ =require( 'lodash');
+// const spdy =require( 'spdy');
+// const config =require( '../config');
+// const logger =require( './logger/logger');
+// const http =require( 'http');
+// const jwt =require( 'jsonwebtoken');
+// const expressWs =require( 'express-ws');
+// const socketServer =require( './socket/socketServer');
 const server = http.createServer(app);
 const options = {
     key: fs.readFileSync(config.ROOT_DIRECTORY + '/cert/dev.askmirror.local.key'),

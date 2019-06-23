@@ -1,11 +1,11 @@
-import _ from 'lodash';
-import mongoose from 'mongoose';
+const _ =require( 'lodash');
+const mongoose =require( 'mongoose');
 
-export default (query, params, Model) => {
+module.exports =  (query, params, Model) => {
     return query;
 };
 
-// export default (query, controllQuery = {}) => {
+// module.exports =  (query, controllQuery = {}) => {
 // 	const { select = '', populate = '', sort, page, limit, whereQueries = {}, deepSelects = {} } = controllQuery;
 // 	if (!_.isEmpty(sort)) {
 // 		query.sort(sort);

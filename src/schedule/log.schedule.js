@@ -1,6 +1,5 @@
-import schedule from 'node-schedule';
-import axios from 'axios';
-import command from '../command/command';
+const schedule = require('node-schedule');
+const command = require('../command/command');
 
 export const job = schedule.scheduleJob('*/5 * * * * *', async () => {
     // const result = await axios.get('http://localhost:5000/api/user');
@@ -9,6 +8,13 @@ export const job = schedule.scheduleJob('*/5 * * * * *', async () => {
 
     console.log(new Date());
 });
-export default () => {
+
+const task = () => {
     const job = job;
 };
+
+module.exports = task;
+
+// module.exports =  () => {
+//     const job = job;
+// };

@@ -1,6 +1,7 @@
 import { useEffect, useReducer, useState, useCallback } from 'react';
 import { initRespError } from './redux.hook';
 
+
 const GeoJsonPoint = (coordinates, name) => ({
     type: 'Feature',
     geometry: {

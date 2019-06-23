@@ -1,12 +1,12 @@
-import mongoose from 'mongoose';
-import SchemasTypes from './types/schemas.types';
-import refs from './refs/schemas.refs';
+const mongoose = require('mongoose');
+const SchemasTypes = require('./types/schemas.types');
+const refs = require('./refs/schemas.refs');
 const { Schema } = mongoose;
-export const collection = 'Auth';
+const collectionName = `Auth`;
 const enumRoles = [ 'guest', 'primary', 'admin' ];
 const enumPrivilege = [ 'Read Only', 'Read and Write', 'Write Only' ];
 const { userRef } = refs;
-const AuthSchema = Schema(
+const schema = Schema(
     {
         user: { ...userRef, required: true, unique: true, autopopulate: { maxDepth: 2 } },
         username: { type: String, required: true, unique: true },
@@ -24,8 +24,9 @@ const AuthSchema = Schema(
             default: true
         }
     },
-    { collection: collection, timestamps: true }
+    { collection: collectionName, timestamps: true }
 );
-AuthSchema.plugin(require('mongoose-autopopulate'));
-export default AuthSchema;
-export const authRef = { type: Schema.Types.ObjectId, ref: collection };
+schema.plugin(require('mongoose-autopopulate'));
+schema.ref = { type: Schema.Types.ObjectId, ref: collectionName };
+schema.collection = collectionName;
+module.exports = schema;

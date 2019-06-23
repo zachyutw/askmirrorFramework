@@ -1,8 +1,8 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 const { Schema } = mongoose;
-import imageSchema from './image.schema';
-export const collection = 'Product';
-export const ProductSchema = Schema(
+const imageSchema = require('./image.schema');
+const collection = 'Product';
+const schema = Schema(
     {
         name: { type: String, required: true },
         category: { type: String, index: true, default: 'default' },
@@ -22,4 +22,4 @@ export const ProductSchema = Schema(
     { collection: collection, timestamps: true }
 );
 
-export default ProductSchema;
+module.exports = schema;

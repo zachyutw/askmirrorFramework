@@ -1,29 +1,29 @@
-import mongoose from 'mongoose';
-import types from './types/types';
-import { userRef } from './combineRefs';
+const mongoose = require('mongoose');
+const types = require('./types/types');
+const { userRef } = require('./combineRefs');
 const { Schema } = mongoose;
-import imageSchema from './image.schema';
-export const collection = 'Resume';
-export const ResumeSchema = Schema(
-	{
-		user: { ...userRef, required: true, unique: true },
-		appler: {
-			firstName: String,
-			lastName: String
-		},
-		info: {
-			address: String
-		},
-		contact: {
-			phone: String,
-			email: types.emailType
-		},
-		websites: [ { name: String, url: String, icon: String } ],
-		skills: [ { category: String, name: String, experience: String } ],
-		photoUrl: { type: String },
-		image: imageSchema
-	},
-	{ collection: collection, timestamps: true }
+const imageSchema = require('./image.schema');
+const collectionName = `Resume`;
+const schema = Schema(
+    {
+        user: { ...userRef, required: true, unique: true },
+        appler: {
+            firstName: String,
+            lastName: String
+        },
+        info: {
+            address: String
+        },
+        contact: {
+            phone: String,
+            email: types.emailType
+        },
+        websites: [ { name: String, url: String, icon: String } ],
+        skills: [ { category: String, name: String, experience: String } ],
+        photoUrl: { type: String },
+        image: imageSchema
+    },
+    { collection: collectionName, timestamps: true }
 );
-
-export default ResumeSchema;
+schema.collectionName = collectionName;
+module.exports = schema;

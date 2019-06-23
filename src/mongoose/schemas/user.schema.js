@@ -1,9 +1,9 @@
-import mongoose from 'mongoose';
-import _ from 'lodash';
-import SchemasTypes from './types/schemas.types';
+const mongoose = require('mongoose');
+const _ = require('lodash');
+const SchemasTypes = require('./types/schemas.types');
 const { Schema } = mongoose;
-export const collection = 'User';
-const UserSchema = Schema(
+const collectionName = `User`;
+const schema = Schema(
     {
         username: { type: String, required: true, unique: true },
         category: { type: String, default: 'normal' },
@@ -13,8 +13,8 @@ const UserSchema = Schema(
         detail: SchemasTypes.userDetail,
         contact: SchemasTypes.contactType
     },
-    { collection: collection, timestamps: true }
+    { collection: collectionName, timestamps: true }
 );
-UserSchema.index({ category: 1 });
-
-export default UserSchema;
+schema.index({ category: 1 });
+schema.collectionName = collectionName;
+module.exports = schema;

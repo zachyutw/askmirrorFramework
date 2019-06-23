@@ -1,23 +1,38 @@
-import express from 'express';
+// const express =require( 'express');
 
-import bodyParser from 'body-parser';
-import cookieSession from 'cookie-session';
-import passport from 'passport';
-import morgan from 'morgan';
-import dbMongoose from './db/db.mongoose';
-import path from 'path';
-import errorHandler from './handlers/error.handler';
-// import logSchedule from './schedule/log.schedule';
-// import socketIo from './services/socketIo';
-import { loadPassportStrategy } from './security/passport.strategy';
+// const bodyParser =require( 'body-parser');
+// const cookieSession =require( 'cookie-session');
+// const passport =require( 'passport');
+// const morgan =require( 'morgan');
+// const dbMongoose =require( './db/db.mongoose');
+// const path =require( 'path');
+// const errorHandler =require( './handlers/error.handler');
+// const { loadPassportStrategy } =require( './security/passport.strategy');
+// const router =require( './routes/router');
+// const dotenv =require( 'dotenv');
+// const crosSecurity =require( './security/cors.security');
+// const expressStaticGzip =require( 'express-static-gzip');
+// const compression =require( 'compression');
+// const config =require( '../config');
+// const logger =require( './logger/logger');
 
-import router from './routes/router';
-import dotenv from 'dotenv';
-import crosSecurity from './security/cors.security';
-import expressStaticGzip from 'express-static-gzip';
-import compression from 'compression';
-import config from '../config';
-import logger from './logger/logger';
+const express = require('express');
+const bodyParser = require('body-parser');
+const cookieSession = require('cookie-session');
+const passport = require('passport');
+const morgan = require('morgan');
+const dbMongoose = require('./db/db.mongoose');
+const path = require('path');
+const errorHandler = require('./handlers/error.handler');
+const { loadPassportStrategy } = require('./security/passport.strategy');
+const router = require('./routes/router');
+const dotenv = require('dotenv');
+const crosSecurity = require('./security/cors.security');
+const expressStaticGzip = require('express-static-gzip');
+const compression = require('compression');
+const config = require('../config');
+const logger = require('./logger/logger');
+
 dotenv.config();
 let oneYear = 1 * 365 * 24 * 60 * 60 * 1000;
 
@@ -95,4 +110,5 @@ app.get('*', (req, res, next) => {
 
 // const server = https.createServer(sslOptions, app);
 
-export default app;
+// module.exports =  app;
+module.exports = app;

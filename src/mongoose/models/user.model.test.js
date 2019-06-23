@@ -1,6 +1,6 @@
-import User from './user.model';
-import factory from '../../factory/factory';
-import req from 'supertest';
+const User = require('./user.model');
+const factory = require('../../factory/factory');
+const req = require('supertest');
 
 process.env.TEST_SUITE = 'auth-model';
 describe('Create', () => {

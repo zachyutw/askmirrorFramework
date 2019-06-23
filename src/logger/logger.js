@@ -1,5 +1,5 @@
-import * as winston from 'winston';
-import * as fs from 'fs';
+const winston = require('winston');
+const fs = require('fs');
 
 const LOG_NAME = 'infoLog';
 const LOG_FILE_DIR = 'logs';
@@ -11,12 +11,7 @@ if (!fs.existsSync(dir)) {
 }
 
 let logger = new winston.createLogger({
-    format: winston.format.combine(
-        winston.format.label({ label: 'AskMirror:' }),
-        winston.format.timestamp(),
-        winston.format.prettyPrint(),
-        winston.format.json()
-    ),
+    format: winston.format.combine(winston.format.label({ label: 'AskMirror:' }), winston.format.timestamp(), winston.format.prettyPrint(), winston.format.json()),
     transports: [
         new winston.transports.Console({
             level: 'debug',
@@ -50,4 +45,4 @@ logger.stream = {
     }
 };
 
-export default logger;
+module.exports = logger;

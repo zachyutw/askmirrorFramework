@@ -1,7 +1,12 @@
-import jwt from 'jsonwebtoken';
-import uuidv1 from 'uuid/v1';
-import boom from 'boom';
-import moment from 'moment';
+// const jwt =require( 'jsonwebtoken');
+// const uuidv1 =require( 'uuid/v1');
+// const boom =require( 'boom');
+// const moment =require( 'moment');
+
+const jwt = require('jsonwebtoken');
+const uuidv1 = require('uuid/v1');
+const boom = require('boom');
+const moment = require('moment');
 const Roles = {
     USER: 60 * 60 * 24 * 3,
     VERIFY_TOKEN: 60 * 60 * 24
@@ -45,4 +50,6 @@ const verify = (accessToken = '') => {
 };
 JWTSecurity.sign = sign;
 JWTSecurity.verify = verify;
-export default JWTSecurity;
+
+module.exports = JWTSecurity;
+// module.exports =  JWTSecurity;

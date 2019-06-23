@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { restfulReducer, initRestfulState, restfulFields, Controller, dispatchAction } from './redux.hook';
-import App from '../../App';
+import { restfulReducer, initRestfulState, restfulFields, Controller, dispatchAction } from './redux';
+import App from '../App';
 import { render, fireEvent, getByTestId } from 'react-testing-library';
 import axios from 'axios';
 import _ from 'lodash';

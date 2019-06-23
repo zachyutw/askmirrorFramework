@@ -1,12 +1,12 @@
-import axios from 'axios';
-import boom from 'boom';
-import cheerio from 'cheerio';
-import path from 'path';
-import config from '../../config';
-import fs from 'fs';
-import _ from 'lodash';
-import zlib from 'zlib';
-import { sleep } from '../lib';
+const axios = require('axios');
+const boom = require('boom');
+const cheerio = require('cheerio');
+const path = require('path');
+const config = require('../../config');
+const fs = require('fs');
+const _ = require('lodash');
+const zlib = require('zlib');
+const { sleep } = require('../lib');
 const controller = {};
 
 const cheerioCk101Book = async (URL, params) => {
@@ -101,7 +101,7 @@ const getCk101 = async (req, res, next) => {
 controller.getHtml = getHtml;
 controller.getCk101 = getCk101;
 
-export default controller;
+module.exports = controller;
 
 const zipFile = (filename) => {
     console.log(filename);

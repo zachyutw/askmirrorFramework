@@ -1,11 +1,11 @@
-import express from 'express';
-import controller from '../mongoose/controllers/auth.controller';
-import withRoute from './Route/withRoute';
-import { asyncErrorMiddleware } from '../handlers/error.handler';
-import axios from 'axios';
-import passport from 'passport';
-import passportStrategy from '../security/passport.strategy';
-// import withRoute from './Routes/resourcesRoutes';
+const express = require('express');
+const controller = require('../mongoose/controllers/auth.controller');
+const withRoute = require('./Route/withRoute');
+const { asyncErrorMiddleware } = require('../handlers/error.handler');
+const axios = require('axios');
+const passport = require('passport');
+const passportStrategy = require('../security/passport.strategy');
+// const withRoute =require( './Routes/resourcesRoutes');
 
 // const controllerFeild = {
 //     postSignIn: { name: 'postSignIn', url: '/signIn', method: 'post' },
@@ -34,4 +34,4 @@ router = withRoute(router, controller);
 
 /**! New router path put over here **/
 // router = ResourcesRoutes(router, controller);
-export default router;
+module.exports = router;

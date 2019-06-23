@@ -1,14 +1,14 @@
-import Auth from '../models/auth.model';
-import _ from 'lodash';
-import boom from 'boom';
-import sendMail from '../../mail/mail';
-import nodemailer from 'nodemailer';
-import withController from './Controller/withController';
-import HomeTemplate from '../../mail/components/Template/HomeTemplate';
-import JWTSecurity from '../../security/jwt.security';
+const Auth = require('../models/auth.model');
+const _ = require('lodash');
+const boom = require('boom');
+const sendMail = require('../../mail/mail');
+const nodemailer = require('nodemailer');
+const withController = require('./Controller/withController');
+const HomeTemplate = require('../../mail/components/Template/HomeTemplate');
+const JWTSecurity = require('../../security/jwt.security');
 const Model = Auth;
 const ModelName = _.lowerCase(Model.collection.name);
-const ModelListName = ModelName + 's';
+const ModelListName = `${ModelName}s`;
 // let controller = resourcesController(Model, Model.collection.name);
 
 const ServerVerifyMailConfig = (tokens, auth) => {
@@ -111,4 +111,5 @@ controller.getEmailVerifyCallback = async (req, res, next) => {
     }
     res.send({ message: 'success', auth: req.user });
 };
-export default controller;
+
+module.exports = controller;

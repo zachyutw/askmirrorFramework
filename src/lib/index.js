@@ -1,4 +1,4 @@
-import _ from 'lodash';
+const _ =require( 'lodash');
 export const stringfyURI = (value) => encodeURIComponent(JSON.stringify(value));
 
 const passJsonParse = (value) => {

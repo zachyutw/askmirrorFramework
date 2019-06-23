@@ -1,8 +1,8 @@
-import userRoute from './user.route';
-import authRoute from './auth.route';
-import tplRoute from './tpl.route';
-import crawlerRoute from './crawler.route';
-import boom from 'boom';
+const userRoute = require('./user.route');
+const authRoute = require('./auth.route');
+const tplRoute = require('./tpl.route');
+const crawlerRoute = require('./crawler.route');
+const boom = require('boom');
 
 /**
  * @param {*} app express
@@ -27,4 +27,4 @@ const combineRoutes = (app) => {
     });
 };
 
-export default combineRoutes;
+module.exports = combineRoutes;

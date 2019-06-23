@@ -1,8 +1,8 @@
-import mongoose from 'mongoose';
-import SchemasTypes from './types/schemas.types';
+const mongoose = require('mongoose');
+const SchemasTypes = require('./types/schemas.types');
 const { Schema } = mongoose;
-export const collection = 'Tpl';
-const TplSchema = Schema(
+const collectionName = 'Tpl';
+const schema = Schema(
     {
         name: String,
         title: String,
@@ -11,8 +11,8 @@ const TplSchema = Schema(
         image: SchemasTypes.imageType,
         tags: { type: [ String ], index: true }
     },
-    { collection: collection, timestamps: true }
+    { collection: collectionName, timestamps: true }
 );
-TplSchema.index({ category: 1 });
-
-export default TplSchema;
+schema.index({ category: 1 });
+schema.collectionName = collectionName;
+module.exports = schema;

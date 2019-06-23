@@ -1,5 +1,5 @@
-import app from './app';
-import req from 'supertest';
+const app = require('./app');
+const req = require('supertest');
 process.env.TEST_SUITE = 'server-test';
 describe('Test root path', () => {
     test('Should response the GET method', () => {

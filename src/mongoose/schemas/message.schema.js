@@ -1,17 +1,16 @@
-import mongoose from 'mongoose';
-import _ from 'lodash';
-import { userRef } from './combineRefs';
+const mongoose = require('mongoose');
+const _ = require('lodash');
+const { userRef } = require('./combineRefs');
 const { Schema } = mongoose;
-export const collection = 'Message';
+const collectionName = 'Message';
 
-const MessageSchema = Schema(
-	{
-		text: { type: String, required: true },
-		user: { ...userRef },
-		isRead: { type: Boolean, default: false }
-	},
-	{ collection: collection, timestamps: true }
+const schema = Schema(
+    {
+        text: { type: String, required: true },
+        user: { ...userRef },
+        isRead: { type: Boolean, default: false }
+    },
+    { collection: collectionName, timestamps: true }
 );
-export default MessageSchema;
-
-export const messageRef = { type: Schema.Types.ObjectId, ref: collection };
+schema.rsef = { type: Schema.Types.ObjectId, ref: collectionName };
+module.exports = schema;

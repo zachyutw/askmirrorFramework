@@ -1,4 +1,5 @@
-import socketio from 'socket.io';
+// const socketio =require( 'socket.io');
+const socketio = require('socket.io');
 let io = {};
 let client = {};
 
@@ -37,4 +38,6 @@ const socketServer = (server) => {
 //         '/chat': 'will get'
 //     });
 // });
-export default socketServer;
+
+module.exports = socketServer;
+// module.exports =  socketServer;
