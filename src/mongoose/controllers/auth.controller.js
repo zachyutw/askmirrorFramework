@@ -1,10 +1,10 @@
 const Auth = require('../models/auth.model');
 const _ = require('lodash');
 const boom = require('boom');
-const sendMail = require('../../mail/mail');
+// const sendMail = require('../../mail/mail');
 const nodemailer = require('nodemailer');
 const withController = require('./Controller/withController');
-const HomeTemplate = require('../../mail/components/Template/HomeTemplate');
+// const HomeTemplate = require('../../mail/components/Template/HomeTemplate');
 const JWTSecurity = require('../../security/jwt.security');
 const Model = Auth;
 const ModelName = _.lowerCase(Model.collection.name);
@@ -12,16 +12,16 @@ const ModelListName = `${ModelName}s`;
 // let controller = resourcesController(Model, Model.collection.name);
 
 const ServerVerifyMailConfig = (tokens, auth) => {
-    const html = HomeTemplate(
-        {
-            field: {
-                text: 'Please Verify Your Email',
-                href: 'https://dev.askmirror.local:5001/api/auth/email/verify/callback?status=success&method=verifyMail&token=' + tokens.accessToken
-            },
-            greeding: 'Hi ' + auth.user.name + ' Welcome'
-        },
-        { title: 'Verify' }
-    );
+    // const html = HomeTemplate(
+    //     {
+    //         field: {
+    //             text: 'Please Verify Your Email',
+    //             href: 'https://dev.askmirror.local:5001/api/auth/email/verify/callback?status=success&method=verifyMail&token=' + tokens.accessToken
+    //         },
+    //         greeding: 'Hi ' + auth.user.name + ' Welcome'
+    //     },
+    //     { title: 'Verify' }
+    // );
     const verifyMailConfig = {
         from: ' no-relpy-jslandclan@gmail.com',
         to: auth.username,
@@ -29,7 +29,7 @@ const ServerVerifyMailConfig = (tokens, auth) => {
         text: 'That was easy!',
         cc: '',
         bcc: '',
-        html,
+        html: '',
         attachments: []
     };
     return verifyMailConfig;
@@ -55,8 +55,8 @@ controller.postSignUp = (req, res, next) => {
             const { id, user, role, username } = auth;
             const tokens = JWTSecurity.sign({ id, user, role, username }, { role: 'VERIFY_TOKEN' });
             const verifyMailConfig = ServerVerifyMailConfig(tokens, auth);
-            const mailInfo = await sendMail(verifyMailConfig);
-            res.send({ message: 'sign up success', mailInfo, tokens });
+            // const mailInfo = await sendMail(verifyMailConfig);
+            res.send({ message: 'sign up success', mailInfo: {}, tokens });
         })
         .catch((err) => {
             console.log(err);
@@ -97,12 +97,13 @@ controller.getEmailVerify = async (req, res, next) => {
         text: 'That was easy!',
         cc: '',
         bcc: '',
-        html: HomeTemplate({ token: 'qwer1234' }, { title: 'Home' }),
+        // html: HomeTemplate({ token: 'qwer1234' }, { title: 'Home' }),
+        html: '',
         attachments: []
     };
-    const mailInfo = await sendMail(verifyMailConfig);
+    // const mailInfo = await sendMail(verifyMailConfig);
     // console.log(mail);
-    res.send({ message: 'success', mailInfo });
+    res.send({ message: 'success', mailInfo: {} });
 };
 controller.getEmailVerifyCallback = async (req, res, next) => {
     // console.log(mail);
