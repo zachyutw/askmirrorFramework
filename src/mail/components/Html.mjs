@@ -1,4 +1,4 @@
-import React from 'react';
+const React =require( 'react');
 const Html = (props) => {
     return (
         <html>
@@ -11,4 +11,4 @@ const Html = (props) => {
         </html>
     );
 };
-export default Html;
+module.exports =  Html;

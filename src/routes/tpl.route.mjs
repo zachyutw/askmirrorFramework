@@ -1,10 +1,12 @@
-import express from 'express';
-import controller from '../mongoose/controllers/tpl.controller';
-import withRoute from './Route/withRoute';
-// import { asyncErrorMiddleware } from '../handlers/error.handler';
-let router = express.Router();
-/**! New router path put over here **/
+// const express =require( 'express');
+// const controller =require( '../mongoose/controllers/user.controller');
+// const withRoute =require( './Route/withRoute');
 
-/**! New router path put over here **/
+const express = require('express');
+const controller = require('../mongoose/controllers/tpl.controller');
+const withRoute = require('./Route/withRoute');
+
+let router = express.Router();
 router = withRoute(router, controller);
-export default router;
+// module.exports =  router;
+module.exports = router;

@@ -1,4 +1,4 @@
-import path from 'path';
+const path = require('path');
 let config = {};
 /**
  * * 設定root 路徑 
@@ -8,4 +8,4 @@ let config = {};
 config.ROOT_DIRECTORY = path.resolve(__dirname);
 config.LOG_FILE_DIR = path.resolve(__dirname, 'logs');
 
-export default config;
+module.exports = config;

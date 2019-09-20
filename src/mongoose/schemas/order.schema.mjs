@@ -1,9 +1,9 @@
-import mongoose from 'mongoose';
-import _ from 'lodash';
-import SchemasTypes from './types/schemas.types';
+const mongoose = require('mongoose');
+const _ = require('lodash');
+const SchemasTypes = require('./types/schemas.types');
 const { Schema } = mongoose;
-export const collection = 'Order';
-const OrderSchema = Schema(
+const collectionName = 'Order';
+const schema = Schema(
     {
         category: { type: String, default: 'default', index: true },
         image: SchemasTypes.imageType,
@@ -11,8 +11,8 @@ const OrderSchema = Schema(
         tags: { type: [ String ], index: true },
         contact: SchemasTypes.contactType
     },
-    { collection: collection, timestamps: true }
+    { collection: collectionName, timestamps: true }
 );
-OrderSchema.index({ category: 1 });
-
-export default OrderSchema;
+schema.index({ category: 1 });
+schema.collectionName = collectionName;
+module.exports = schema;

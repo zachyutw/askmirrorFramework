@@ -1,7 +1,7 @@
-import _ from 'lodash';
-import { asyncErrorMiddleware } from '../../handlers/error.handler';
+const _ =require( 'lodash');
+const { asyncErrorMiddleware } =require( '../../handlers/error.handler');
 
-export default (router, controller) => {
+module.exports =  (router, controller) => {
     router.get(`/count`, asyncErrorMiddleware(controller.getListCount));
     router.get(`/schema`, asyncErrorMiddleware(controller.getSchema));
     router.post(`/`, asyncErrorMiddleware(controller.postItem));

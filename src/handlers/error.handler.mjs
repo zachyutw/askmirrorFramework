@@ -1,8 +1,8 @@
-import boom from 'boom';
-import logger from '../logger/logger';
-import _ from 'lodash';
+const boom = require('boom');
+const logger = require('../logger/logger');
+const _ = require('lodash');
 
-export const asyncErrorMiddleware = (fn) => (req, res, next) => {
+const asyncErrorMiddleware = (fn) => (req, res, next) => {
     Promise.resolve(fn(req, res, next)).catch((err) => {
         if (!err.isBoom) {
             return next(boom.badImplementation(err));
@@ -55,4 +55,5 @@ const errorHandler = (error, req, res, next) => {
         return res.status(500).send(defaultError);
     }
 };
-export default errorHandler;
+errorHandler.asyncErrorMiddleware = asyncErrorMiddleware;
+module.exports = errorHandler;

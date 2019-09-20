@@ -1,4 +1,5 @@
-import cors from 'cors';
+// const cors =require( 'cors');
+const cors = require('cors');
 const whitelist = [ 'http://localhost:8080', 'http://localhost:3000', 'https://www.google.com' ];
 const corsOptionsDelegate = function (req, callback){
     let corsOptions;
@@ -15,4 +16,6 @@ const corsOptionsDelegate = function (req, callback){
 };
 
 const corsSecurity = cors(corsOptionsDelegate);
-export default corsSecurity;
+
+module.exports = corsSecurity;
+// module.exports =  corsSecurity;

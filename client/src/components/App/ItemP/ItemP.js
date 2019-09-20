@@ -1,22 +1,62 @@
-import React, { useContext } from 'react';
+import React, { useContext, useCallback } from 'react';
 import GlobalContext from '../../../contexts/Global/GlobalContext';
-const ItemP = ({ className, icon, src, text, children, ...rest }) => {
+
+const Exsit = ({ exsit, children, className, ...rest }) => {
+    return (
+        <div className={[ className, exsit ? '' : 'hidden' ].join(' ')} {...rest}>
+            {children}
+        </div>
+    );
+};
+const CoverImage = ({ src }) => {
+    const handleOnLoad = useCallback((e) => {
+        // console.log(e);
+    }, []);
+    return <img onLoad={handleOnLoad} src={src} />;
+};
+const ItemP = ({
+    className,
+    onChange = (e, data) => {
+        // console.log(data);
+    },
+    icon,
+    src,
+    text,
+    children,
+    value,
+    name,
+    index,
+    actionType,
+    ...rest
+}) => {
     const globalContext = useContext(GlobalContext);
     const { t } = globalContext;
+    const handleOnChange = useCallback(
+        (e) => {
+            onChange(e, { name, value, actionType });
+        },
+        [ name, value, onChange, actionType ]
+    );
+
     return (
-        <div className={[ 'className', className ].join(' ')} {...rest}>
-            <span className={[ icon ? 'icon' : 'hidden' ].join(' ')}>
-                <i className={[ 'ui icon', icon ].join(' ')} />
-            </span>
-            <div className={src ? 'img' : 'hidden'}>
-                <img className='cover' src={src} />
-            </div>
-            <div className='content'>
-                <div className='text'>{t(text)}</div>
-                {children}
+        <div onClick={handleOnChange} className={[ 'itemP', className ].join(' ')} {...rest}>
+            <Exsit exsit={src} className='imgContent'>
+                <CoverImage src={src} />
+            </Exsit>
+            <Exsit exsit={icon} className='iconContent'>
+                <i className={[ 'icon', icon ].join('  ')} />
+            </Exsit>
+
+            <div className='itemContent'>
+                <Exsit exsit={text} className='text'>
+                    {t(text)}
+                </Exsit>
+                <Exsit exsit={children} className='childContent'>
+                    {children}
+                </Exsit>
             </div>
         </div>
     );
 };
 
-export default React.memo(ItemP);
+export default ItemP;

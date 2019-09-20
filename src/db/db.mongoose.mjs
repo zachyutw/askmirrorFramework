@@ -1,5 +1,5 @@
-import Mongoose from 'mongoose';
-import logger from '../logger/logger';
+const Mongoose =require( 'mongoose');
+const logger =require( '../logger/logger');
 
 const dbMongoose = async () => {
     const DB_HOST = process.env.DB_HOST;
@@ -18,4 +18,4 @@ const dbMongoose = async () => {
     }
 };
 
-export default dbMongoose;
+module.exports =  dbMongoose;

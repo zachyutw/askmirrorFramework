@@ -1,5 +1,5 @@
-import nodemailer from 'nodemailer';
-import _ from 'lodash';
+const nodemailer =require( 'nodemailer');
+const _ =require( 'lodash');
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
@@ -9,7 +9,7 @@ const transporter = nodemailer.createTransport({
 });
 
 const mailer = async (mail) => await transporter.sendMail(mail);
-export default mailer;
+module.exports =  mailer;
 /**   
  * attachments option in the message object that contains an array of attachment objects.
 
@@ -19,7 +19,7 @@ filename - filename to be reported as the name of the attached file.Use of unico
     content - String, Buffer or a Stream contents for the attachment
 path - path to the file if you want to stream the file instead of including it(better for larger attachments)
     href – an URL to the file(data uris are allowed as well)
-contentType - optional content type for the attachment, if not set will be derived from the filename property
+contentType - optional content type for the attachment, if not set will be derived =require( the filename property
 contentDisposition - optional content disposition type for the attachment, defaults to ‘attachment’
 cid - optional content id for using inline images in HTML message source
 encoding - If set and content is string, then encodes the content to a Buffer using the specified encoding.Example values: ‘base64’, ‘hex’, ‘binary’ etc.Useful if you want to use binary attachments in a JSON formatted email object.

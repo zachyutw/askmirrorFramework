@@ -3,17 +3,26 @@
     --my-theme-color-r: #eaeaea;
     --dark: #581d00;
     --light: #eaeaea;
+    --bg: #fff;
     --color-0: #eaeaea;
     --color-1: #c6b7b0;
     --color-2: #a18475;
     --color-3: #7d503b;
     --color-4: #581d00;
+    --word: #333;
+    --point: #c1645c;
+    --border-radius: .28571429rem;
+    --border: 1px solid rgba(34, 36, 38, .15);
+    --border-color: rgba(34, 36, 38, .8);
+    --box-shadow: 0 1px 2px 0 rgba(34, 36, 38, .15);
+    --box-shadow2: 2px 2px 2px rgba(50, 50, 50, 0.6);
 }
 html {
     font-size: 14px;
 }
 body {
     margin: 0;
+    color: var(--word);
     padding: 0;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
     -webkit-font-smoothing: antialiased;
@@ -32,20 +41,16 @@ button {
     border-radius: 5px;
     cursor: pointer;
 }
+.hidden {
+    display: none !important;
+}
+.btn {
+    cursor: pointer;
+}
 .themeColor {
     color: var(--color-2);
 }
-.ui.button.btn {
-    background: #fff;
-}
 
-.ui.button.btn:hover {
-    color: #fff;
-}
-
-.ui.button.btn:focus {
-    background: #fff;
-}
 .inputItemP {
     cursor: pointer;
 }
@@ -60,8 +65,8 @@ button {
 
 img.cover,
 video.cover {
-    width: 100%;
-    height: 100%;
+    min-width: 100%;
+    min-height: 100%;
     object-fit: cover;
 }
 .mirror img,
@@ -86,4 +91,21 @@ video.cover {
 }
 .center {
     text-align: center;
+}
+
+.isLoading {
+    background-image: linear-gradient(to right, blue, pink);
+    background-position: 0px 0px;
+    background-size: 15rem 5rem;
+    background-repeat: repeat-x;
+    animation: animationBgImg 2s infinite alternate;
+    overflow: hidden;
+}
+@keyframes animationBgImg {
+    from {
+        background-position: 0 0;
+    }
+    to {
+        background-position: 100% 0;
+    }
 }

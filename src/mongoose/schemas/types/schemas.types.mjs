@@ -1,5 +1,5 @@
-import { emailReg, validateEmail } from '../validater/validater';
-import config from '../../../../config';
+const { emailReg, validateEmail } = require('../validater/validater');
+const config = require('../../../../config');
 const { DEFAULT_IMAGE } = config;
 const emailType = {
     type: String,
@@ -42,4 +42,4 @@ const userDetail = {
 };
 const types = { emailType, providerType, imageType, contactType, userDetail };
 
-export default types;
+module.exports = types;

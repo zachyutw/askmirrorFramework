@@ -1,17 +1,15 @@
-import mongoose from 'mongoose';
-import _ from 'lodash';
-import SchemasTypes from './types/schemas.types';
+const mongoose = require('mongoose');
 const { Schema } = mongoose;
-export const collection = 'LineProduct';
-const LineProductSchema = Schema(
+const collectionName = 'LineProduct';
+const schema = Schema(
     {
         quantity: { type: Number, default: 0 },
         category: { type: String, default: 'default', index: true },
         service: {},
         price: {}
     },
-    { collection: collection, timestamps: true }
+    { collection: collectionName, timestamps: true }
 );
-LineProductSchema.index({ category: 1 });
-
-export default LineProductSchema;
+schema.index({ category: 1 });
+schema.collectionName = collectionName;
+module.exports = schema;

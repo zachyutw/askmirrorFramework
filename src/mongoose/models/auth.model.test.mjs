@@ -1,8 +1,8 @@
-import Auth from './auth.model';
-import User from './user.model';
-import factory from '../../factory/factory';
-import req from 'supertest';
-import UserSchema from '../schemas/user.schema';
+const Auth = require('./auth.model');
+const User = require('./user.model');
+const factory = require('../../factory/factory');
+const req = require('supertest');
+const UserSchema = require('../schemas/user.schema');
 
 process.env.TEST_SUITE = 'auth-model';
 describe('Auth Model Testing', () => {

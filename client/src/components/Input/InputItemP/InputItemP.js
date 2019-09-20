@@ -25,15 +25,15 @@ const InputItemSelectionP = ({ input = {}, options = [], className, renderProp: 
 
 const WithFieldInputItemSelectionP = withField(InputItemSelectionP);
 
-const InputItemP = ({ input = {}, text, style, className, ref, to, innerRef, replace, icon, render, children, ...rest }) => {
+const InputItemP = ({ actionType, input = {}, text, style, className, ref, to, innerRef, replace, icon, render, children, ...rest }) => {
     const [ actived, setActived ] = useState(false);
     const { onChange, name, value } = input;
     const handleOnClick = useCallback(
         (e) => {
             setActived(true);
-            onChange(e, { name, value, to, innerRef, replace });
+            onChange(e, { actionType, name, value, to, innerRef, replace });
         },
-        [ onChange, name, value, to, innerRef, replace ]
+        [ onChange, name, value, to, innerRef, replace, actionType ]
     );
     const globalContext = useContext(GlobalContext);
     const { t } = globalContext;

@@ -1,5 +1,6 @@
-import _ from 'lodash';
-export const stringfyURI = (value) => encodeURIComponent(JSON.stringify(value));
+const _ = require('lodash');
+const index = {};
+const stringfyURI = (value) => encodeURIComponent(JSON.stringify(value));
 
 const passJsonParse = (value) => {
     try {
@@ -18,7 +19,7 @@ const splitArray = (value) => {
     }
 };
 
-export const parseQuery = {
+const parseQuery = {
     parse: (search) => {
         // console.log(search[0]);
         if (search[0] !== '?') {
@@ -38,11 +39,10 @@ export const parseQuery = {
     },
     stringfyURI
 };
-JSON.stringfyURI = stringfyURI;
 
 // 作者：wheato
 // 链接：https://juejin.im/post/59cdb6526fb9a00a4e67c7fb
-export function limitLoad (urls, handler, limit){
+function limitLoad (urls, handler, limit){
     const sequence = [].concat(urls); // 对数组做一个拷贝
     // let count = 0;
     let promises;
@@ -82,7 +82,7 @@ export function limitLoad (urls, handler, limit){
         });
 }
 
-export const rmDirFiles = function (dirPath){
+const rmDirFiles = function (dirPath){
     try {
         var files = fs.readdirSync(dirPath);
     } catch (e) {
@@ -100,7 +100,7 @@ export const rmDirFiles = function (dirPath){
     // fs.rmdirSync(dirPath);
 };
 
-export function writeTextPromise (remotePath, filePath, mainName, ext){
+function writeTextPromise (remotePath, filePath, mainName, ext){
     //將檔案刪除後重新製作
     if (fs.existsSync(path.resolve(filePath, mainName + ext))) {
         fs.unlinkSync(path.resolve(filePath, mainName + ext));
@@ -138,7 +138,7 @@ export function writeTextPromise (remotePath, filePath, mainName, ext){
     });
 }
 
-export const writeTxt = function (remotePath, filePath, mainName, ext){
+const writeTxt = function (remotePath, filePath, mainName, ext){
     fs.readdir(remotePath, function (err, files){
         if (err) {
             console.log(err);
@@ -171,10 +171,19 @@ export const writeTxt = function (remotePath, filePath, mainName, ext){
     });
 };
 
-export function sleep (ms){
+function sleep (ms){
     return new Promise(function (resolve){
         return setTimeout(function (){
             return resolve();
         }, ms);
     });
 }
+
+index.parseQuery = parseQuery;
+index.limitLoad = limitLoad;
+index.rmDirFiles = rmDirFiles;
+index.writeTextPromise = writeTextPromise;
+index.writeTxt = writeTxt;
+index.sleep = sleep;
+
+module.exports = index;

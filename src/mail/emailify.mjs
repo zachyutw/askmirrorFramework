@@ -1,7 +1,7 @@
-import React from 'react';
-import ReactDOMServer from 'react-dom/server';
-import { ServerStyleSheet } from 'styled-components';
-import juice from 'juice';
+const React =require( 'react');
+const ReactDOMServer =require( 'react-dom/server');
+const { ServerStyleSheet } =require( 'styled-components');
+const juice =require( 'juice');
 
 const HtmlTemplate = ({ body, styles, title }) => `<!DOCTYPE html>
 <html>
@@ -22,4 +22,4 @@ const emailify = (Componet) => (props, { title }) => {
     return juice(HtmlTemplate({ body, title, styles }));
 };
 
-export default emailify;
+module.exports =  emailify;

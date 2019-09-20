@@ -1,4 +1,4 @@
-import React from 'react';
+const React =require( 'react');
 
 function Column ({ children }){
     return <td>{children}</td>;
@@ -43,4 +43,4 @@ function Grid ({ children }){
 Grid.Row = Row;
 Grid.Column = Column;
 
-export default Grid;
+module.exports =  Grid;

@@ -1,12 +1,13 @@
-import axios from 'axios';
-import boom from 'boom';
-import cheerio from 'cheerio';
-import path from 'path';
-import config from '../../config';
-import fs from 'fs';
-import _ from 'lodash';
-import zlib from 'zlib';
-import { sleep } from '../lib';
+const axios = require('axios');
+const boom = require('boom');
+const cheerio = require('cheerio');
+const path = require('path');
+const config = require('../../config');
+const fs = require('fs');
+const _ = require('lodash');
+const zlib = require('zlib');
+const { sleep } = require('../lib');
+const puppeteer = require('puppeteer');
 const controller = {};
 
 const cheerioCk101Book = async (URL, params) => {
@@ -34,7 +35,7 @@ const cheerioCk101Book = async (URL, params) => {
     $('.t_f').each(function (i, el){
         chapters.push($(this).text());
     });
-    return chapters;
+    return chapters.join('\n');
 };
 
 const getHtml = async (req, res, next) => {
@@ -50,8 +51,15 @@ const getHtml = async (req, res, next) => {
     }
 };
 
+
+
 const getCk101 = async (req, res, next) => {
     let duriation = new Date();
+    
+    
+    
+
+
     const respData = await await axios
         .get('https://ck101.com/forum.php', { params: { mod: 'viewthread', ...req.query } })
         .then((resp) => {
@@ -65,24 +73,27 @@ const getCk101 = async (req, res, next) => {
     const $ = cheerio.load(respData);
     const pageEnd = +_.trim($('.last').html(), '... ');
     const tid = req.query.tid;
-    res.send({ message: 'success', fileUrl: process.env.STATIC_PATH + '/novel/' + tid + '.text', predictionTimes: duriation * pageEnd / 500 });
+    res.send({ message: 'success', fileUrl: process.env.STATIC_PATH + '/novel/' + tid + '.txt', predictionTimes: duriation * pageEnd / 500 });
     const URLs = _.times(pageEnd, (n) => cheerioCk101Book(`https://ck101.com/forum.php?mod=viewthread&page=${n + 1}&tid=${tid}`));
 
-    let books = [];
-    const result = await URLs.reduce((task, promise, i) => {
+    await URLs.reduce((task, promise, i) => {
         return task
             .then(() => promise)
-            .then((text) => {
-                books.push(text);
+            .then(async (text) => {
+                await fs.promises.writeFile(path.resolve(config.ROOT_DIRECTORY, 'src', 'public', 'novel', tid + '.txt'), text, { encoding: 'utf8', flag: 'a' });
                 console.log(`-- ${i + 1} / ${URLs.length}`);
             })
             .catch((err) => console.log(err));
     }, Promise.resolve()).then(() => {
         console.log(`>> ${URLs.length} completed`);
-        return books;
+        return;
     });
+    return;
+    // const writeStream = fs.writeStream(path.resolve(config.ROOT_DIRECTORY, 'src', 'public', 'novel', tid + '.text'));
 
-    await fs.promises.writeFile(path.resolve(config.ROOT_DIRECTORY, 'src', 'public', 'novel', tid + '.text'), result.join('\n'), 'utf8');
+    // await fs.promises.writeFile(path.resolve(config.ROOT_DIRECTORY, 'src', 'public', 'novel', tid + '.text'), books.join('\n'), 'utf8').then(() => {
+    //     console.log('file setup');
+    // });
     // await sleep(1000);
     // await zipFile(path.resolve(config.ROOT_DIRECTORY, 'src', 'public', 'novel', tid + '.text'));
     return;
@@ -101,7 +112,7 @@ const getCk101 = async (req, res, next) => {
 controller.getHtml = getHtml;
 controller.getCk101 = getCk101;
 
-export default controller;
+module.exports = controller;
 
 const zipFile = (filename) => {
     console.log(filename);

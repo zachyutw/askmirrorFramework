@@ -4,8 +4,12 @@ import useToggle from '../../../hooks/useToggle';
 const SectionP = ({ children, toggle, parallax = {}, className, absolute, ...rest }) => {
     const [ actived, toggleActived ] = useToggle(true);
     return (
-        <section className={[ !_.isEmpty(parallax) ? 'parallax' : '', absolute ? 'absolute' : '' ].join(' ')} onClick={toggle ? toggleActived : () => console.log('click')}>
-            {toggle && <div className='section toggle'>{toggle}</div>}
+        <section className={[ !_.isEmpty(parallax) ? 'parallax' : '', absolute ? 'absolute' : '' ].join(' ')}>
+            {toggle && (
+                <div className='section toggle' onClick={toggle ? toggleActived : () => console.log('click')}>
+                    {toggle}
+                </div>
+            )}
             <div className='bg' style={{ ...parallax }} />
             <div className={[ 'content', className, actived ? '' : 'hidden' ].join(' ')} {...rest}>
                 {children}

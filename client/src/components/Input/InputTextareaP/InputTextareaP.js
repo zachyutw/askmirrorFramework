@@ -1,30 +1,41 @@
-import React, { useContext, useCallback } from 'react';
+import React, { useContext, useCallback, useState, useRef, useMemo, useEffect } from 'react';
 import GlobalContext from '../../../contexts/Global/GlobalContext';
+import { withField } from '../withField';
+// import s from './InputTextareaP.module.css';
 
-const InputTextareaP = ({ input, onChange, value, placeholder, type, ...rest }) => {
+const InputTextareaP = ({ actionType, placeholder, input = {}, maxLength, style, autoGrow, ...rest }) => {
     const globalContext = useContext(GlobalContext);
-    const { onChange: inputOnChange } = input;
+    const { onChange, name, value = '', ...restInput } = input;
+    const [ localValue, setValue ] = useState('');
+    const [ wordLength, setWordLength ] = useState(0);
+
+    const ref = useRef({});
     const { t } = globalContext;
     const handleOnChange = useCallback(
         (e) => {
-            if (onChange) {
-                onChange(e, { name: e.target.name, value: e.target.value });
-            } else {
-                inputOnChange(e.target.value);
-            }
+            setWordLength(e.target.value.length);
+            setValue(e.target.value);
+            onChange(e, { actionType, name: e.target.name, value: e.target.value });
         },
-        [ inputOnChange, onChange ]
+        [ onChange ]
     );
+    useEffect(
+        () => {
+            setValue(value);
+        },
+        [ value ]
+    );
+    const height = useMemo(
+        () => {
+            return Math.max(ref.current.scrollHeight, ref.current.clientHeight) || ref.current.clientHeight;
+        },
+        [ ref.current.scrollHeight ]
+    );
+    console.log(value);
     return (
-        <textarea
-            className={'input inputP ' + type}
-            value={value}
-            {...rest}
-            {...input}
-            onChange={handleOnChange}
-            placeholder={t(placeholder)}
-        />
+        <div className='relative'>
+            <textarea {...rest} {...input} ref={ref} value={localValue} placeholder={t(placeholder)} name={name} data-word-length={wordLength} maxLength={maxLength} style={{ height: autoGrow ? height : '', ...rest }} onChange={handleOnChange} />
+        </div>
     );
 };
-
-export default InputTextareaP;
+export default withField(InputTextareaP);

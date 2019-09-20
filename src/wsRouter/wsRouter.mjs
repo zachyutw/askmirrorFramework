@@ -1,8 +1,10 @@
 /**
  * WebSocket router
  */
-import express from 'express';
-import expressWS from 'express-ws';
+// const express =require( 'express');
+// const expressWS =require( 'express-ws');
+const express = require('express');
+const expressWS = require('express-ws');
 
 var wsRouter = null;
 
@@ -113,7 +115,7 @@ class WSRouter {
     receiveCmd (cmd) {}
 }
 
-export default {
+module.exports = {
     init (server) {
         if (wsRouter == null && server != null) {
             wsRouter = new WSRouter(server);
@@ -121,3 +123,11 @@ export default {
         return wsRouter;
     }
 };
+// module.exports =  {
+//     init (server) {
+//         if (wsRouter == null && server != null) {
+//             wsRouter = new WSRouter(server);
+//         }
+//         return wsRouter;
+//     }
+// };

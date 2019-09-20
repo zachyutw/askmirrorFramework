@@ -1,8 +1,8 @@
-import _ from 'lodash';
-import mongoose from 'mongoose';
-import faker from 'faker';
-export const getQueryIds = (ids) => _.chain(ids).split(',').map((id) => mongoose.Types.ObjectId(id)).value();
-export const getQuerySort = (sort) =>
+const _ = require('lodash');
+const mongoose = require('mongoose');
+const faker = require('faker');
+const getQueryIds = (ids) => _.chain(ids).split(',').map((id) => mongoose.Types.ObjectId(id)).value();
+const getQuerySort = (sort) =>
     _.chain(sort)
         .split(',')
         .chunk(2)
@@ -17,7 +17,7 @@ export const getQuerySort = (sort) =>
             return prev;
         }, {})
         .value();
-export const createObj = (key, value) => {
+const createObj = (key, value) => {
     const obj = {};
     const parts = key.split('.');
     if (parts.length === 1) {
@@ -29,14 +29,14 @@ export const createObj = (key, value) => {
     return obj;
 };
 
-export const queryItemPlugin = (query, params = {}) => {
+const queryItemPlugin = (query, params = {}) => {
     const { select } = params;
     if (select) {
         query.select(select.replace(',', ' '));
     }
     return query;
 };
-export const queryListPlugin = (query, params, Model) => {
+const queryListPlugin = (query, params, Model) => {
     const { ids, sort, limit = 100, page, select, ...restParams } = params;
     if (sort) {
         const reduceSort = getQuerySort(sort);
@@ -76,7 +76,7 @@ export const queryListPlugin = (query, params, Model) => {
     return query;
 };
 
-export default (Model) => {
+module.exports = (Model) => {
     Model.schemaKeysMap = _.keys(Model.schema.paths).reduce((prev, current) => {
         prev[current] = Model.schema.paths[current].instance;
         return prev;

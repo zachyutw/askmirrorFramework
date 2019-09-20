@@ -1,7 +1,7 @@
-import { exec } from 'child_process';
-import sys from 'sys';
+const { exec } =require( 'child_process');
+const sys =require( 'sys');
 
-export default () => {
+module.exports =  () => {
     exec('pwd', (error, stdout, stderr) => {
         sys.print(stdout);
     });

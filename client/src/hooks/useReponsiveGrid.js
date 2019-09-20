@@ -1,8 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 
-const getCursor = (scrollWidth, length, minWidth, rows) => {
+const getResponsiveSize = (scrollWidth, length, minWidth, rows) => {
     let _coursor;
-
     if (scrollWidth < 769) {
         _coursor = Math.floor(scrollWidth / minWidth) * rows;
     } else if (Math.floor(scrollWidth / minWidth) * rows < length) {
@@ -28,11 +27,19 @@ const useResponsiveGrid = (ref, propMinWidth, propRows = 3) => {
         },
         [ ref.current.scrollWidth ]
     );
-    const size = useMemo(() => getCursor(scrollWidth, length, minWidth, rows), [ scrollWidth, length, minWidth, rows ]);
-    const cursor = useMemo(() => (scrollWidth ? size * page : 5 * page), [ page, size ]);
-    const isDataBottom = useMemo(() => cursor * page >= length, [ cursor, length, page ]);
 
-    return { cursor, size, page, length, scrollWidth, rows, minWidth, setPage, setRows, setLength, setMinWidth, isDataBottom };
+    const columns = useMemo(() => Math.floor(scrollWidth / minWidth), [ scrollWidth, minWidth ]);
+    const size = useMemo(() => getResponsiveSize(scrollWidth, length, minWidth, rows), [ scrollWidth, length ]);
+
+    const cursor = useMemo(
+        () => {
+            return scrollWidth ? size * page : 5 * page;
+        },
+        [ page, size ]
+    );
+
+    const isDataBottom = useMemo(() => size * page >= length, [ size, length, page ]);
+    return { cursor, size, page, length, scrollWidth, columns, rows, minWidth, setPage, setRows, setLength, setMinWidth, isDataBottom };
 };
 
 export default useResponsiveGrid;

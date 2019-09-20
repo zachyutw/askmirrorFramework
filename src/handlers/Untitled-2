@@ -1,0 +1,5 @@
+import userRoute from './user.route';
+import authRoute from './auth.route';
+import tplRoute from './tpl.route';
+import crawlerRoute from './crawler.route';
+import boom from 'boom';

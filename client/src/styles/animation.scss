@@ -72,3 +72,14 @@
 .slideRight {
     animation: slideRight 500ms;
 }
+@keyframes flipUp {
+    from {
+        transform: rotateX(90deg);
+    }
+    to {
+        transform: rotateX(0deg);
+    }
+}
+.flipUp {
+    animation: flipUp 500ms;
+}
