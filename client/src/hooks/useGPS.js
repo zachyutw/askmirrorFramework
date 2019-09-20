@@ -1,7 +1,7 @@
 import { useEffect, useReducer, useState, useCallback } from 'react';
 import { initRespError } from './redux.hook';
-
-
+import { localStorageSafe } from '../lib';
+import _ from 'lodash';
 const GeoJsonPoint = (coordinates, name) => ({
     type: 'Feature',
     geometry: {
@@ -15,6 +15,10 @@ const GeoJsonPoint = (coordinates, name) => ({
 
 const initState = {
     coordinates: [ -123.145575, 49.2695179 ],
+    location: {
+        lng: -123.145575,
+        lat: 49.2695179
+    },
     lng: -123.145575,
     lat: 49.2695179,
     geoJsonGPS: GeoJsonPoint([ -123.145575, 49.2695179 ], 'currentLocation')
@@ -26,7 +30,9 @@ const reducer = (state, action) => {
         case 'success':
             const lat = action.coords.latitude;
             const lng = action.coords.longitude;
-            return { ...state, type: action.type, condition: action.condition, lat, lng, coordinates: [ lng, lat ], geoJsonGPS: GeoJsonPoint([ lng, lat ], 'currentLocation') };
+            const gpsInfo = { ...state, type: action.type, location: { lat, lng }, condition: action.condition, lat, lng, coordinates: [ lng, lat ], geoJsonGPS: GeoJsonPoint([ lng, lat ], 'currentLocation') };
+            localStorageSafe.setItem('gpsInfo', gpsInfo);
+            return gpsInfo;
         case 'fail':
             return { ...state, ...action };
         default:
@@ -55,7 +61,7 @@ const useGPS = (propActived) => {
         timeout: 600000,
         maximumAge: 1000000
     });
-    const [ state, dispatch ] = useReducer(reducer, initState);
+    const [ state, dispatch ] = useReducer(reducer, _.isEmpty(localStorageSafe.getItem('gps')) ? initState : localStorageSafe.getItem('gps'));
     const getGPS = useCallback(dispatchAction(dispatch), [ dispatch, dispatchAction ]);
     useEffect(
         () => {

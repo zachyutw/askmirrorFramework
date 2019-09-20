@@ -1,17 +1,41 @@
-import React, { useContext, useCallback } from 'react';
+import React, { useContext, useCallback, useState, useEffect } from 'react';
 import GlobalContext from '../../../contexts/Global/GlobalContext';
 import { withField } from '../withField';
-const InputP = ({ placeholder, input = {}, ...rest }) => {
+const InputDataList = ({ options = [], id }) => {
+    return <datalist id={id}>{options.map((value, index) => <option key={index} value={value} />)}</datalist>;
+};
+
+const InputP = ({ actionType, placeholder, dataList = {}, maxLength, input = {}, children, ...rest }) => {
     const globalContext = useContext(GlobalContext);
+    const [ wordLength, setWordLength ] = useState(0);
+
     const { t } = globalContext;
-    const { onChange, name } = input;
+    const { onChange, name, value = '' } = input;
+    console.log(value);
+    const [ localValue, setValue ] = useState(value);
+
     const handleOnChange = useCallback(
         (e) => {
-            onChange(e, { name: e.target.name, value: e.target.value });
+            setWordLength(e.target.value.length);
+            setValue(e.target.value);
+            onChange(e, { actionType, name, value: e.target.value, [name]: e.target.value });
         },
         [ onChange ]
     );
-    return <input placeholder={t(placeholder)} name={name} {...rest} {...input} onChange={handleOnChange} />;
+    useEffect(
+        () => {
+            setValue(value);
+        },
+        [ value ]
+    );
+
+    return (
+        <div className='input'>
+            <input placeholder={t(placeholder)} name={name} {...rest} maxLength={maxLength} {...input} list={dataList.id} data-word-length={wordLength} value={localValue} onChange={handleOnChange} />
+            {dataList.id && <InputDataList {...dataList} />}
+            {children}
+        </div>
+    );
 };
 
 export default withField(InputP);

@@ -2,13 +2,14 @@ import React, { useMemo, useCallback } from 'react';
 import { pickByIdentity } from '../../lib';
 
 export const withField = (Component) => (props) => {
-    const { input = {}, className, meta, name, onChange, onBlur = () => {}, onFocus = () => {}, onClick, defaultValue, ref, ...rest } = props;
+    const { actionType, input = {}, className, meta, name, onChange, onBlur = () => {}, onFocus = () => {}, onClick, defaultValue, ref, ...rest } = props;
     const metaClassNames = useMemo(() => pickByIdentity(meta), [ meta ]);
     const { onChange: inputOnChange, onBlur: inputOnBlur, onFocus: inputFocus, ...restInput } = input;
+
     const handleOnChange = useCallback(
         (e, data) => {
             if (onChange) {
-                onChange(e, { ...data });
+                onChange(e, data);
             } else if (inputOnChange) {
                 inputOnChange(data.value);
             }
@@ -34,5 +35,5 @@ export const withField = (Component) => (props) => {
         },
         [ onFocus, inputFocus ]
     );
-    return <Component {...rest} className={[ className, metaClassNames ].join(' ')} input={{ name, value: defaultValue, ...restInput, onBlur: handleOnBlur, onChange: handleOnChange, onFocus: handleOnFocus, onClick, ref }} />;
+    return <Component {...rest} className={[ className, metaClassNames ].join(' ')} actionType={actionType} input={{ name, value: defaultValue, ...restInput, onBlur: handleOnBlur, onChange: handleOnChange, onFocus: handleOnFocus, onClick, ref }} />;
 };

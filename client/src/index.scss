@@ -5,6 +5,20 @@
 @import './styles/section';
 @import './styles/form.scss';
 @import './styles/animation.scss';
+@import './styles/geoMap.scss';
+@import './styles/item.scss';
+@import './styles/fixed.scss';
+.btns {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+.row {
+    flex-direction: row;
+}
+.column {
+    flex-direction: column;
+}
 .image {
     position: relative;
     .img {

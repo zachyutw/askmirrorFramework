@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 const imageSchema = require('./image.schema');
-const collection = 'Product';
+const collectionName = 'Product';
 const schema = Schema(
     {
         name: { type: String, required: true },
@@ -10,7 +10,7 @@ const schema = Schema(
         brand: { type: String },
         weight: { type: Number },
         desc: { type: String, default: 'We are building more contents for our products' },
-        supplier: { type: String, default: 'JSislandClan' },
+        supplier: { type: String, default: 'JSislasndClan' },
         useageCount: { type: String, default: 1 },
         unitPrice: { type: Number, default: 0 },
         unitGroupNumber: { type: Number, default: 1 },
@@ -19,7 +19,7 @@ const schema = Schema(
         inventoryCount: { type: Number, default: 9999 },
         image: imageSchema
     },
-    { collection: collection, timestamps: true }
+    { collection: collectionName, timestamps: true }
 );
-
+schema.collectionName = collectionName;
 module.exports = schema;

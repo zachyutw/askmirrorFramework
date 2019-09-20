@@ -3,8 +3,8 @@ const _ = require('lodash');
 const { userRef, commentRef } = require('./combineRefs');
 const PointSchema = require('./point.schema');
 const { Schema } = mongoose;
-const collection = 'BlogPost';
-const BlogPostSchema = Schema(
+const collectionName = 'BlogPost';
+const schema = Schema(
     {
         user: { ...userRef, required: true, index: true },
         title: String,
@@ -17,7 +17,7 @@ const BlogPostSchema = Schema(
         isCommented: Boolean,
         comments: [ commentRef ]
     },
-    { collection: collection, timestamps: true }
+	{ collection: collectionName, timestamps: true }
 );
-BlogPostSchema.blogPostRef = { type: Schema.Types.ObjectId, ref: collection };
-module.exports = BlogPostSchema;
+schema.ref = { type: Schema.Types.ObjectId, ref: collectionName };
+module.exports = schema;
