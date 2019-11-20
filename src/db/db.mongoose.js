@@ -1,12 +1,9 @@
-const Mongoose =require( 'mongoose');
-const logger =require( '../logger/logger');
+const Mongoose = require('mongoose');
+const logger = require('../logger/logger');
 
 const dbMongoose = async () => {
-    const DB_HOST = process.env.DB_HOST;
-    const DB_PORT = process.env.DB_PORT;
-    const DB_NAME = process.env.DB_NAME;
     try {
-        await Mongoose.connect(`mongodb://${DB_HOST}:${DB_PORT}/${DB_NAME}`, {
+        await Mongoose.connect(process.env.MONGO_DB_URL, {
             useCreateIndex: true,
             useNewUrlParser: true,
             useFindAndModify: false
@@ -18,4 +15,4 @@ const dbMongoose = async () => {
     }
 };
 
-module.exports =  dbMongoose;
+module.exports = dbMongoose;

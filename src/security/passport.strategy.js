@@ -86,6 +86,7 @@ const loadPassportStrategy = () => {
                 });
         }
     );
+
     const jwtStrategy = new JWTStrategy(
         {
             jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),

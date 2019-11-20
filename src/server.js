@@ -1,102 +1,105 @@
-const app = require('./app');
-const fs = require('fs');
-const _ = require('lodash');
-const spdy = require('spdy');
+const dotenv = require('dotenv');
+dotenv.config();
+const http = require('http');
+const express = require('express');
+const bodyParser = require('body-parser');
+const cookieSession = require('cookie-session');
+const passport = require('passport');
+const morgan = require('morgan');
+const dbMongoose = require('./db/db.mongoose');
+const path = require('path');
+const errorHandler = require('./handlers/error.handler');
+const { loadPassportStrategy } = require('./security/passport.strategy');
+const router = require('./routes/router');
+
+const crosSecurity = require('./security/cors.security');
+// const expressStaticGzip = require('express-static-gzip');
+const compression = require('compression');
 const config = require('../config');
 const logger = require('./logger/logger');
-const http = require('http');
-const jwt = require('jsonwebtoken');
-const expressWs = require('express-ws');
+const send = require('send');
+const parseUrl = require('parseurl');
 const socketServer = require('./socket/socketServer');
+let oneYear = 1 * 365 * 24 * 60 * 60 * 1000;
 
-// const app =require( './app');
-// const fs =require( 'fs');
-// const _ =require( 'lodash');
-// const spdy =require( 'spdy');
-// const config =require( '../config');
-// const logger =require( './logger/logger');
-// const http =require( 'http');
-// const jwt =require( 'jsonwebtoken');
-// const expressWs =require( 'express-ws');
-// const socketServer =require( './socket/socketServer');
-const server = http.createServer(app);
-const options = {
-    key: fs.readFileSync(config.ROOT_DIRECTORY + '/cert/dev.askmirror.local.key'),
-    cert: fs.readFileSync(config.ROOT_DIRECTORY + '/cert/dev.askmirror.local.crt')
-};
-// const wsRouter = WSRouter.init(server);
-// wsRouter.lintenClientConnect();
-expressWs(app, server);
+//? generatro a path which always pooint to corrent root directoriy
 
-let connectedPool = {};
-let userPool = {};
-const onlinePoolMsg = (userPool, message) => {
-    return JSON.stringify({
-        type: 'status',
-        pool: _.values(userPool),
-        message,
-        createAt: new Date()
-    });
-};
+//* passport setup
+dbMongoose();
+const app = express();
+//* Node.js compression middleware.
+app.use(compression());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
-app.ws('/ws', function (ws, req, next){
-    const id = jwt.decode(req.ws.protocol).id;
-    if (req.ws.protocol) {
-        const user = jwt.decode(req.ws.protocol) || {};
-        connectedPool[req.ws.protocol] = ws;
-        userPool[user.id] = req.ws.protocol;
-    } else {
-        connectedPool[req.headers['sec-websocket-key']] = ws;
-    }
-    const poolMsg = onlinePoolMsg(userPool, 'join ' + id);
-    console.log(ws.readyState);
-    // console.log('link');
-    // console.log(_.values(connectedPool).length);
-    // console.log(connectedPool);
-    // console.log(userPool);
-    // const user = jwt.decode(decodeURIComponent(req.params.id)) || {};
-    // ws.send(JSON.stringify({ type: 'message', text: 'WebSocket Server Welcome ' + user.displayName }));
-
-    ws.on('message', function (msg){
-        ws.send(`Hello, you sent -> ${msg}`);
-        console.log(msg);
-        // console.log(ws.readyState);
-        // _.values(connectedPool).map((ws) => {
-        //     ws.send(poolMsg);
-        // });
-        // console.log(req.ws.protocol);
-        // console.log(msg);
-        // let msgData = {};
-        // try {
-        //     msgData = JSON.parse(msg);
-        // } catch (err) {
-        //     msgData = msg;
-        // }
-        // if (typeof msgData === 'object' && msgData.sendTo) {
-        //     msgData.sendFrom = user;
-        //     if (queueUser[msgData.sendTo]) {
-        //         queueUser[msgData.sendTo].send(JSON.stringify(msgData));
-        //     }
-        //     if (queueUser[req.params.id]) {
-        //         queueUser[req.params.id].send(JSON.stringify(msgData));
-        //     }
-        // } else if (queueUser[req.params.id]) {
-        //     queueUser[req.params.id].send(msg);
-        //     console.log(msg + ' send to ' + req.params.id);
-        // }
-    });
-    ws.on('close', (ev) => {
-        // const id = ws.protocol ? jwt.decode(ws.protocol).id : req.headers['sec-websocket-key'];
-        // const poolMsg = onlinePoolMsg(userPool, 'leave ' + id);
-        // broadCast(connectedPool, poolMsg);
-        // console.log('close ' + id);
-        // delete connectedPool[id];
-    });
-    ws.send('Hi there, I am a WebSocket server');
+app.use(
+    morgan('combined', {
+        stream: logger.stream,
+        skip: function (req, res){
+            return res.statusCode < 400;
+        }
+    })
+);
+app.use(
+    cookieSession({
+        name: 'session',
+        //! d    hh    mm  ss
+        maxAge: 24 * 60 * 60 * 1000, // 24 hours
+        keys: [ process.env.SESSION_SECRET ]
+    })
+);
+loadPassportStrategy();
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(crosSecurity);
+app.options('*', crosSecurity);
+app.use((req, res, next) => {
+    let sourceConnection = {};
+    sourceConnection['user-agent'] = req.headers['user-agent'];
+    sourceConnection['host'] = req.headers['host'];
+    sourceConnection['ip'] = req.headers['x-real-ip'] || req.connection['remoteAddress'];
+    sourceConnection['x-forwarded-for'] = req.headers['x-forwarded-for'];
+    req.sourceConnection = sourceConnection;
     next();
 });
 
-socketServer(server);
+app.use('/api/*', (req, res, next) => {
+    logger.info({
+        message: 'API Request',
+        originalUrl: req.originalUrl,
+        method: req.method,
+        source: req.sourceConnection
+    });
+    next();
+});
+router(app);
+
+app.use(errorHandler);
+// app.use('/static', express.static(path.resolve(config.ROOT_DIRECTORY, 'src', 'public'), { maxAge: 0 }));
+app.use('/static', (req, res, next) => {
+    send(req, parseUrl(req).pathname, { root: path.resolve(config.ROOT_DIRECTORY, 'src', 'public') }).pipe(res);
+});
+app.use('/', express.static(path.resolve(config.ROOT_DIRECTORY, 'client', 'build'), { maxAge: 60 * 60 * 3 }));
+
+app.get('*', (req, res, next) => {
+    // console.log(req)
+    if (!req.ws) {
+        res.sendFile(path.resolve(config.ROOT_DIRECTORY, 'client', 'build', 'index.html'));
+    } else {
+        next();
+    }
+});
+// app.use('/',expressStaticGzip(path.resolve(serverPathUrl, 'client', 'dist')));
+// const sslOptions = {
+//     key: fs.readFileSync('./cert/server.key'),
+//     cert: fs.readFileSync('./cert/server.cer')
+// };
+
+// const server = https.createServer(sslOptions, app);
+
+// module.exports =  app;
+
+const server = http.createServer(app);
 server.listen(process.env.PORT, (error) => {
     if (error) {
         console.error(error);
@@ -105,12 +108,5 @@ server.listen(process.env.PORT, (error) => {
         logger.info('server started - ' + process.env.PORT);
     }
 });
-const serverHttps = spdy.createServer(options, app);
-serverHttps.listen(process.env.SSL_PORT, (error) => {
-    if (error) {
-        console.error(error);
-        return process.exit(1);
-    } else {
-        logger.info('https server started - ' + process.env.SSL_PORT);
-    }
-});
+socketServer(server);
+// module.exports = app;

@@ -3,12 +3,12 @@ const bodyParser = require('body-parser');
 const cookieSession = require('cookie-session');
 const passport = require('passport');
 const morgan = require('morgan');
-const dbMongoose = require('./db/db.mongoose');
+// const dbMongoose = require('./db/db.mongoose');
 const path = require('path');
 const errorHandler = require('./handlers/error.handler');
 const { loadPassportStrategy } = require('./security/passport.strategy');
 const router = require('./routes/router');
-const dotenv = require('dotenv');
+
 const crosSecurity = require('./security/cors.security');
 const expressStaticGzip = require('express-static-gzip');
 const compression = require('compression');
@@ -16,16 +16,14 @@ const config = require('../config');
 const logger = require('./logger/logger');
 const send = require('send');
 const parseUrl = require('parseurl');
-
-dotenv.config();
+const dotenv = require('dotenv');
 let oneYear = 1 * 365 * 24 * 60 * 60 * 1000;
 
 //? generatro a path which always pooint to corrent root directoriy
 
-const jwtSecrect = 'lasfu';
-
+dotenv.config();
 //* passport setup
-dbMongoose();
+// dbMongoose();
 const app = express();
 //* Node.js compression middleware.
 app.use(compression());
