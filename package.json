@@ -15,7 +15,8 @@
     },
     "scripts": {
         "ppt": "nodemon --ignore './static' src/pptScralwer.js ",
-        "start": "NODE_ENV=dev nodemon  --ignore './client/'  --max_old_space_size=4096  src/server.js",
+        "start": "node  src/server.js",
+        "dev-start": "NODE_ENV=dev nodemon  --ignore './client/'  --max_old_space_size=4096  src/server.js",
         "dev": "NODE_ENV=dev nodemon --ignore './client/' --exec babel-node src/server.js",
         "build": "NODE_ENV=prod babel src --out-dir dist",
         "serve": "NODE_ENV=prod node dist/server.js",
@@ -86,9 +87,7 @@
     },
     "jest": {
         "rootDir": "src",
-        "setupFilesAfterEnv": [
-            "./tests/jest.config.js"
-        ],
+        "setupFilesAfterEnv": [ "./tests/jest.config.js" ],
         "testEnvironment": "node",
         "browser": false,
         "verbose": true
