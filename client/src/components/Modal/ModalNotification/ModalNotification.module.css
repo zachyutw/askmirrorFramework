@@ -1,8 +1,0 @@
-.content {
-    padding: 1.5rem;
-    background-color: rgba(50, 50, 50, 0.8) !important;
-    color: var(--light) !important;
-}
-.modal:global(.hidden) {
-    display: flex !important;
-}

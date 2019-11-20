@@ -1,5 +1,4 @@
-const nodemailer =require( 'nodemailer');
-const _ =require( 'lodash');
+const nodemailer = require('nodemailer');
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
@@ -9,7 +8,7 @@ const transporter = nodemailer.createTransport({
 });
 
 const mailer = async (mail) => await transporter.sendMail(mail);
-module.exports =  mailer;
+module.exports = mailer;
 /**   
  * attachments option in the message object that contains an array of attachment objects.
 
