@@ -100,7 +100,7 @@ app.get('*', (req, res, next) => {
 // module.exports =  app;
 
 const server = http.createServer(app);
-server.listen(process.env.PORT, (error) => {
+server.listen(process.env.PORT || 80, (error) => {
     if (error) {
         console.error(error);
         return process.exit(1);
