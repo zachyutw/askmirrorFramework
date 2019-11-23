@@ -32,7 +32,11 @@ const getItem = (Model) => async (req, res, next) => {
 };
 const putItem = (Model) => async (req, res, next) => {
     const modelName = _.lowerCase(Model.collection.name);
-    const item = await Model.putItem({ _id: req.params.id }, req.body, req.query);
+    const item = await Model.putItem(
+        { _id: req.params.id },
+        req.body,
+        req.query
+    );
     res.send({ [modelName]: item });
 };
 const deleteItem = (Model) => async (req, res, next) => {

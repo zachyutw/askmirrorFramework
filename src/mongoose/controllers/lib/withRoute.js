@@ -1,4 +1,4 @@
-const { asyncErrorMiddleware } = require('../../handlers/error.handler');
+const { asyncErrorMiddleware } = require('../../../lib/error.handler');
 
 module.exports = (router, controller) => {
     router.get(`/count`, asyncErrorMiddleware(controller.getListCount));

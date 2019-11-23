@@ -1,17 +1,17 @@
-const userRoute = require('./user.route');
-const authRoute = require('./auth.route');
-const tplRoute = require('./tpl.route');
-const crawlerRoute = require('./crawler.route');
+const userAPI = require('./mongoose/controllers/user.controller');
+const authAPI = require('./mongoose/controllers/auth.controller');
+const tplAPI = require('./mongoose/controllers/tpl.controller');
+const crawlerAPI = require('./crawler/controllers/crawler.controller');
 const boom = require('boom');
 
 /**
  * @param {*} app express
  */
 const combineRoutes = (app) => {
-    app.use(`/api/user`, userRoute);
-    app.use(`/api/auth`, authRoute);
-    app.use(`/api/tpl`, tplRoute);
-    app.use(`/api/crawler`, crawlerRoute);
+    app.use(`/api/user`, userAPI);
+    app.use(`/api/auth`, authAPI);
+    app.use(`/api/tpl`, tplAPI);
+    app.use(`/api/crawler`, crawlerAPI);
     // app.use(`/api/chatroom`, RESTPlugins.allFunctionsPlugin, chatroom);
     // app.use(`/api/auth`, RESTPlugins.allFunctionsPlugin, auth);
     // app.use(`/api/user`, RESTPlugins.allFunctionsPlugin, user);

@@ -8,9 +8,9 @@ const passport = require('passport');
 const morgan = require('morgan');
 const dbMongoose = require('./db/db.mongoose');
 const path = require('path');
-const errorHandler = require('./handlers/error.handler');
+const errorHandler = require('./lib/error.handler');
 const { loadPassportStrategy } = require('./security/passport.strategy');
-const router = require('./routes/router');
+const router = require('./router');
 
 const crosSecurity = require('./security/cors.security');
 // const expressStaticGzip = require('express-static-gzip');
@@ -20,6 +20,7 @@ const logger = require('./logger/logger');
 const send = require('send');
 const parseUrl = require('parseurl');
 const socketServer = require('./socket/socketServer');
+const nginxSourceConnection = require('./security/nginx.sourceConnection');
 let oneYear = 1 * 365 * 24 * 60 * 60 * 1000;
 
 //? generatro a path which always pooint to corrent root directoriy
@@ -49,20 +50,12 @@ app.use(
     })
 );
 loadPassportStrategy();
+
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(crosSecurity);
 app.options('*', crosSecurity);
-app.use((req, res, next) => {
-    let sourceConnection = {};
-    sourceConnection['user-agent'] = req.headers['user-agent'];
-    sourceConnection['host'] = req.headers['host'];
-    sourceConnection['ip'] = req.headers['x-real-ip'] || req.connection['remoteAddress'];
-    sourceConnection['x-forwarded-for'] = req.headers['x-forwarded-for'];
-    req.sourceConnection = sourceConnection;
-    next();
-});
-
+app.use(nginxSourceConnection);
 app.use('/api/*', (req, res, next) => {
     logger.info({
         message: 'API Request',
@@ -76,15 +69,24 @@ router(app);
 
 app.use(errorHandler);
 // app.use('/static', express.static(path.resolve(config.ROOT_DIRECTORY, 'src', 'public'), { maxAge: 0 }));
-app.use('/static', (req, res, next) => {
-    send(req, parseUrl(req).pathname, { root: path.resolve(config.ROOT_DIRECTORY, 'src', 'public') }).pipe(res);
+app.use('/public', (req, res, next) => {
+    send(req, parseUrl(req).pathname, {
+        root: path.resolve(config.ROOT_DIRECTORY, 'public')
+    }).pipe(res);
 });
-app.use('/', express.static(path.resolve(config.ROOT_DIRECTORY, 'client', 'build'), { maxAge: 60 * 60 * 3 }));
+app.use(
+    '/',
+    express.static(path.resolve(config.ROOT_DIRECTORY, 'client', 'build'), {
+        maxAge: 60 * 60 * 3
+    })
+);
 
 app.get('*', (req, res, next) => {
     // console.log(req)
     if (!req.ws) {
-        res.sendFile(path.resolve(config.ROOT_DIRECTORY, 'client', 'build', 'index.html'));
+        res.sendFile(
+            path.resolve(config.ROOT_DIRECTORY, 'client', 'build', 'index.html')
+        );
     } else {
         next();
     }

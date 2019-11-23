@@ -17,7 +17,10 @@ const errorResponse = ({ error, domain, status }) => {
         401: 'Auth Error',
         500: 'Internal Server Error'
     };
-    const getErrorMessage = (status) => (errorMessageObj[status] ? errorMessageObj[status] : errorMessageObj[500]);
+    const getErrorMessage = (status) =>
+        errorMessageObj[status]
+            ? errorMessageObj[status]
+            : errorMessageObj[500];
     return {
         domain,
         timestamp: new Date(),
@@ -42,7 +45,10 @@ const errorHandler = (error, req, res, next) => {
         console.error('mongo');
         const duplicateError = errorResponse({ error, domain, status: 400 });
         return res.status(400).send(duplicateError);
-    } else if (error.message === 'Failed to deserialize user out of session' || error.message === 'Failed to deserialize user out of session') {
+    } else if (
+        error.message === 'Failed to deserialize user out of session' ||
+        error.message === 'Failed to deserialize user out of session'
+    ) {
         const authError = errorResponse({ error, domain, status: 401 });
         return res.status(401).send(authError);
     } else if (error.isBoom) {
